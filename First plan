@@ -1,0 +1,112 @@
+Name: StadiumFlow
+Design: has to be mobile responsive and works good for all ratios
+
+Colors:
+Primary dark: #08111F
+Stadium navy: #10233F
+Electric blue: #2F80ED
+Pitch green: #00B894
+Alert amber: #F2C94C
+Critical red: #EB5757
+Surface light: #F8FAFC
+Text light: #F9FAFB
+Text dark: #111827
+
+blue + green as the main identity
+
+Accessibility features:
+1. Multilingual AI assistant
+2. Voice input/output mode
+3. High-contrast toggle
+4. Large text toggle
+5. Accessible route mode:
+   - wheelchair-friendly route
+   - less-crowded route
+   - nearest accessible restroom/elevator/gate
+6. Simple emergency help button
+7. Color + text alerts, not color-only alerts
+8. Offline fallback cards for gate, seat, restroom, transport info
+
+What it helps:
+Fans
+
+find gates, seats, restrooms, exits, transport
+ask questions in any language
+get less-crowded routes
+receive accessibility-friendly guidance
+get sustainability suggestions like public transport/recycling points
+
+Organizers / volunteers / venue staff
+
+see crowd heat zones
+generate incident summaries
+get AI decision suggestions
+send multilingual alerts
+monitor transport/gate congestion
+
+Tools to use:
+✅ Multi-provider fallback
+✅ Semantic caching
+✅ Model downscaling
+✅ Prompt condensation
+✅ RAG for stadium knowledge
+✅ Mock/demo data for risky real-time features
+✅ Vercel/Firebase free hosting
+
+Main AI stack
+Primary: Gemini Flash
+Backup: Groq Llama 3.3 / Llama 3.1
+Optional final fallback: static cached answer
+
+AI architecture:
+React App
+  ↓
+AI Service Layer
+  ↓
+1. Check semantic cache
+  ↓
+2. If no cached answer, classify task
+  ↓
+3. Use cheapest/smallest model first
+  ↓
+4. If quota/rate error, fallback to next provider
+  ↓
+5. Save answer to cache
+  ↓
+Return answer to user
+
+Gemini Flash:
+- multilingual fan Q&A
+- route explanation
+- simple translation
+- alert rewriting
+- accessibility guidance
+
+Groq:
+- backup chat response
+- fast summary
+- incident summarization
+- volunteer/staff assistant
+
+Gemini Pro / stronger model:
+- only for complex operational reasoning
+- not for every user chat
+
+Implementaion:
+Firestore collection: aiCache
+
+Fields:
+- normalizedQuestion
+- answer
+- category
+- language
+- stadiumId
+- createdAt
+- usageCount
+
+Quota safe:
+Normal navigation → database answer
+Repeated question → cache
+Translation → Gemini Flash
+Staff incident summary → Groq/Gemini
+Complex decision support → Gemini stronger model
