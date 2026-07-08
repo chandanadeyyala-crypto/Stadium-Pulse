@@ -1,10 +1,10 @@
-# StadiumPulse AI 🏟️⚡
+# StadiumPulse AI 
 
 **StadiumPulse AI** is a GenAI-powered stadium operations and fan assistance platform designed for the FIFA World Cup 2026. It is built to ensure a safe, efficient, and accessible environment for fans, volunteers, staff, and organizers.
 
 ---
 
-## ⚠️ Core Principle: Grounded Trust (Anti-Hallucination)
+## Core Principle: Grounded Trust (Anti-Hallucination)
 To ensure safety and reliability in crowded stadiums, **AI must never invent facts**. StadiumPulse AI enforces this strict workflow across all AI interfaces:
 
 $$\text{Verified Venue Data} + \text{Live Staff Reports} \rightarrow \text{AI Contextual Explanation / Translation} \rightarrow \text{User}$$
