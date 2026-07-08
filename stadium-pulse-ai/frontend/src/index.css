@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-primaryDark text-textLight font-sans antialiased selection:bg-electricBlue selection:text-white;
+    transition: font-size 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+/* Accessibility - Font Size Scaling */
+html.large-text {
+  font-size: 115%;
+}
+
+html.large-text-extra {
+  font-size: 130%;
+}
+
+/* Accessibility - High Contrast Mode */
+html.high-contrast {
+  --tw-bg-opacity: 1;
+  background-color: #000000 !important;
+}
+
+html.high-contrast body {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+html.high-contrast .bg-stadiumNavy {
+  background-color: #111111 !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+html.high-contrast .text-textLight {
+  color: #FFFFFF !important;
+}
+
+html.high-contrast .text-textDark {
+  color: #000000 !important;
+}
+
+html.high-contrast .text-electricBlue {
+  color: #00FFFF !important; /* High contrast cyan */
+}
+
+html.high-contrast .bg-electricBlue {
+  background-color: #00FFFF !important;
+  color: #000000 !important;
+}
+
+html.high-contrast .border-electricBlue {
+  border-color: #00FFFF !important;
+}
+
+/* Glassmorphism card utilities */
+.glass-panel {
+  background: rgba(16, 35, 63, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-hover {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.glass-panel-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(47, 128, 237, 0.4);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08111F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #10233F;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2F80ED;
+}
