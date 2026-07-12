@@ -1,0 +1,639 @@
+Name: StadiumFlow
+Design: has to be mobile responsive and works good for all ratios
+
+Colors:
+Primary dark: #08111F
+Stadium navy: #10233F
+Electric blue: #2F80ED
+Pitch green: #00B894
+Alert amber: #F2C94C
+Critical red: #EB5757
+Surface light: #F8FAFC
+Text light: #F9FAFB
+Text dark: #111827
+
+blue + green as the main identity
+
+Accessibility features:
+1. Multilingual AI assistant
+2. Voice input/output mode
+3. High-contrast toggle
+4. Large text toggle
+5. Accessible route mode:
+   - wheelchair-friendly route
+   - less-crowded route
+   - nearest accessible restroom/elevator/gate
+6. Simple emergency help button
+7. Color + text alerts, not color-only alerts
+8. Offline fallback cards for gate, seat, restroom, transport info
+
+What it helps:
+Fans
+
+find gates, seats, restrooms, exits, transport
+ask questions in any language
+get less-crowded routes
+receive accessibility-friendly guidance
+get sustainability suggestions like public transport/recycling points
+
+Organizers / volunteers / venue staff
+
+see crowd heat zones
+generate incident summaries
+get AI decision suggestions
+send multilingual alerts
+monitor transport/gate congestion
+
+Tools to use:
+✅ Multi-provider fallback
+✅ Semantic caching
+✅ Model downscaling
+✅ Prompt condensation
+✅ RAG for stadium knowledge
+✅ Mock/demo data for risky real-time features
+✅ Vercel/Firebase free hosting
+
+Main AI stack
+Primary: Gemini Flash
+Backup: Groq Llama 3.3 / Llama 3.1
+Optional final fallback: static cached answer
+
+AI architecture:
+React App
+  ↓
+AI Service Layer
+  ↓
+1. Check semantic cache
+  ↓
+2. If no cached answer, classify task
+  ↓
+3. Use cheapest/smallest model first
+  ↓
+4. If quota/rate error, fallback to next provider
+  ↓
+5. Save answer to cache
+  ↓
+Return answer to user
+
+Gemini Flash:
+- multilingual fan Q&A
+- route explanation
+- simple translation
+- alert rewriting
+- accessibility guidance
+
+Groq:
+- backup chat response
+- fast summary
+- incident summarization
+- volunteer/staff assistant
+
+Gemini Pro / stronger model:
+- only for complex operational reasoning
+- not for every user chat
+
+Implementaion:
+Firestore collection: aiCache
+
+Fields:
+- normalizedQuestion
+- answer
+- category
+- language
+- stadiumId
+- createdAt
+- usageCount
+
+Quota safe:
+Normal navigation → database answer
+Repeated question → cache
+Translation → Gemini Flash
+Staff incident summary → Groq/Gemini
+Complex decision support → Gemini stronger model
+
+| Need                           | Tool                                                                  | Why                                                                                                                 |
+| ------------------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1. Login / logout              | **Firebase Auth**                                                     | Google login, email login, role-based users                                                                         |
+| 2. Save data                   | **Cloud Firestore**                                                   | Stores users, incidents, routes, alerts, cache                                                                      |
+| 3. App data sync               | **Firestore realtime listeners**                                      | Fan/staff dashboards update live                                                                                    |
+| 4. Give info                   | **Firestore + AI service layer**                                      | Static info from DB, AI only when needed                                                                            |
+| 5. Multilingual help           | **Gemini Flash + cached translations**                                | Main multilingual assistant                                                                                         |
+| 6. Info and updates            | **Firestore alerts collection**                                       | Staff creates update → fans see it live                                                                             |
+| 7. Basic app needs             | **React + Firebase + Gemini + Groq fallback**                         | Enough for MVP without complex cloud setup                                                                          |
+| 8. Staff language → fan alerts | **Gemini translation + Firestore alert object**                       | Staff reports in Telugu/Hindi/etc., fans receive in chosen language                                                 |
+| 9. Location/maps               | **Google Maps API if billing okay; fallback Leaflet + OpenStreetMap** | Google Maps needs billing-enabled project/API key; OSM/Leaflet is safer free fallback. ([Google for Developers][1]) |
+| 10. Notifications              | **In-app Firestore notifications first; FCM optional**                | In-app is safer. Push notifications can be added later                                                              |
+| 11. Speech/text/size           | **Web Speech API + accessibility settings**                           | Browser speech synthesis/recognition; recognition has limited browser support. ([MDN Web Docs][2])                  |
+| 12. Updating route             | **Route engine using stadium graph + crowd data**                     | Recalculate safest/least crowded route from Firestore updates                                                       |
+
+Frontend React App
+↓
+Firebase Auth
+↓
+Firestore realtime database
+↓
+AI Service Layer
+↓
+Gemini Flash → Groq fallback → cached/static fallback
+↓
+Maps / Route Engine
+
+Notifications:
+In-app notification drawer
+Firestore realtime listener
+Role-based alerts
+Fan language preference
+Severity colors
+
+Accessibility:
+Speech-to-text: Web Speech API SpeechRecognition
+Text-to-speech: browser speechSynthesis
+Large text: CSS class toggle
+High contrast: CSS theme toggle
+Language: user profile preference
+
+AI pipeline:
+Verified Data
+      +
+Live Staff Reports
+      +
+Official Stadium Information
+      ↓
+      AI
+      ↓
+Clear explanation
+Personalized recommendation
+Translation
+Accessibility support
+Decision support
+
+USP:AI never invents answers. It interprets trusted operational data and delivers personalized, multilingual, accessible guidance in real time
+
+Role based permissions:
+Fan → can view info, ask AI, receive alerts
+Volunteer → can report incidents, update crowd notes
+Staff → can verify reports, create alerts
+Organizer/Admin → can manage venue data, routes, users, dashboards
+
+Frontend:
+1. Fan App
+2. Staff / Organizer Dashboard
+
+Fan App:
+Page 1: Landing / Welcome
+Purpose: first impression.
+
+Components
+Navbar
+Hero section
+Role selector
+Feature cards
+Live demo preview
+CTA buttons
+Layout
+
+Top:
+
+StadiumPulse AI logo
+Fan Login
+Staff Login
+
+Hero:
+
+"Real-time stadium intelligence for safer, smoother FIFA World Cup experiences."
+
+Subtext:
+
+"AI-powered navigation, multilingual assistance, crowd alerts, accessibility support, and staff decision intelligence — grounded in verified venue data."
+
+Buttons:
+
+Continue as Fan
+Staff Dashboard
+View Demo
+
+Feature cards:
+
+Smart Navigation
+Multilingual Help
+Crowd Alerts
+Accessibility Routes
+Staff Intelligence
+Verified Data AI
+
+Page 2: Login / Role Selection
+
+Purpose: simple entry.
+
+Components
+Google sign-in button
+Email login optional
+Role cards
+Language selector
+Accessibility settings shortcut
+
+Roles:
+
+Fan
+Volunteer
+Staff
+Organizer
+
+For demo, we can allow:
+
+Continue as Demo Fan
+Continue as Demo Staff
+Page 3: Fan Home Dashboard
+
+This is the main fan page.
+
+Components
+Top status bar
+Match card
+Seat / gate card
+AI assistant card
+Live alerts
+Quick actions grid
+Recommended route card
+Transport card
+Accessibility shortcut
+Layout
+
+Top bar:
+
+Hello, Fan
+Language: English
+Text size button
+High contrast toggle
+Emergency button
+
+Match card:
+
+Brazil vs Germany
+Venue: Demo Stadium
+Kickoff: 7:30 PM
+Gate: B
+Seat: Section 214, Row 6
+
+Live status strip:
+
+Gate B: Crowded
+Gate D: Open
+Restroom R2: Medium queue
+Metro Exit 3: Normal
+
+Quick actions:
+
+Find My Seat
+Nearest Restroom
+Accessible Route
+Food & Water
+Medical Help
+Transport Exit
+Ask AI
+Page 4: AI Assistant
+
+This is one of the most important pages.
+
+Components
+Chat interface
+Language selector
+Voice input
+Text-to-speech button
+Suggested questions
+Source cards
+Safety disclaimer
+
+Suggested questions:
+
+Where is my gate?
+What is the least crowded route?
+Where is the nearest accessible restroom?
+How do I reach the metro station?
+Translate this alert for me.
+What should I do if my gate is closed?
+
+AI answer format:
+
+Answer:
+Gate B is currently crowded. Use Gate D for faster entry.
+
+Source:
+Operations Team Update · 2 minutes ago
+
+Reason:
+Gate D currently has lower reported crowd density.
+
+Action:
+Open route to Gate D
+
+Important UI rule:
+
+Never show AI answer without a source/status.
+
+If no data:
+
+I don’t have verified information for that location right now.
+Page 5: Smart Navigation / Route Page
+
+Purpose: show route according to crowd/accessibility.
+
+Components
+Map/stadium layout
+Current location input
+Destination search
+Route type selector
+Crowd overlay
+Step-by-step directions
+Route warning card
+
+Route modes:
+
+Fastest route
+Least crowded route
+Wheelchair accessible route
+Family-friendly route
+Emergency exit route
+
+Map UI:
+
+Gate markers
+Section markers
+Restroom markers
+Medical markers
+Crowd heat zones
+Blocked route markers
+
+Route card:
+
+Recommended: Gate D → Concourse East → Section 214
+
+Why:
+Avoids Gate B congestion reported 3 minutes ago.
+
+Source:
+Staff crowd report
+Page 6: Live Alerts
+
+Purpose: all updates in one place.
+
+Components
+Alert filters
+Alert cards
+Severity badges
+Translate button
+Listen button
+Related route button
+
+Filters:
+
+All
+Crowd
+Gate
+Transport
+Medical
+Accessibility
+Emergency
+
+Alert card format:
+
+Warning: Gate B crowded
+Source: Staff Report · 2 min ago
+Recommended action: Use Gate D
+Buttons: Translate | Hear | Show route
+
+Colors:
+
+Green = normal
+Amber = warning
+Red = critical
+Blue = info
+Page 7: Accessibility Center
+
+This page will make the app stand out.
+
+Components
+Large text toggle
+High contrast toggle
+Voice assistance toggle
+Wheelchair route preference
+Less-crowded route preference
+Nearest facilities
+Emergency support
+
+Facility cards:
+
+Accessible entrance
+Elevator
+Wheelchair restroom
+Medical desk
+Quiet zone
+Volunteer help point
+
+Settings:
+
+Preferred language
+Text size
+Voice mode
+Route preference
+Page 8: Transport & Exit Planner
+
+Purpose: after match movement.
+
+Components
+Nearest exit
+Transport options
+Crowd status
+Walking route
+Staff alert updates
+Sustainability suggestion
+
+Cards:
+
+Metro/Shuttle
+Bus
+Taxi/Rideshare
+Parking
+Walking exit
+
+Example:
+
+Recommended: Exit 3 to Metro Shuttle
+
+Reason:
+Exit 1 is crowded based on staff update.
+
+Source:
+Transport staff update · 5 min ago
+Page 9: Staff Dashboard
+
+This is for staff/volunteers.
+
+Components
+Operations overview
+Crowd heat cards
+Incident report button
+Active alerts
+AI summary panel
+Volunteer tasks
+Map overview
+
+Top stats:
+
+Active incidents: 4
+Crowded gates: 2
+Open alerts: 6
+Pending verification: 3
+
+AI summary panel:
+
+"Gate B and East Concourse need attention. Recommend redirecting fans to Gate D and sending two volunteers."
+
+Source:
+
+Based on 5 staff reports from last 10 minutes
+Page 10: Staff Incident Report
+
+Purpose: staff can report in their own language.
+
+Components
+Voice/text input
+Language auto-detect
+Location selector
+Incident category
+Severity selector
+Photo optional
+Submit button
+AI summary preview
+
+Categories:
+
+Crowd
+Medical
+Security
+Lost item/person
+Accessibility issue
+Transport delay
+Gate closure
+Facility issue
+
+Flow:
+
+Staff types/speaks in Hindi/Telugu/etc.
+AI summarizes in English
+AI creates fan alert draft
+Staff reviews
+Staff submits
+
+Important:
+
+AI drafts. Staff approves.
+Page 11: Alert Creation / Approval
+
+For organizer/staff.
+
+Components
+Pending reports list
+AI-generated alert preview
+Language previews
+Audience selector
+Severity selector
+Approve/send button
+
+Audience:
+
+All fans
+Fans near Gate B
+Accessibility users
+Volunteers
+Security team
+Transport team
+
+This page proves operational intelligence.
+
+Page 12: Organizer Command Center
+
+Higher-level dashboard.
+
+Components
+Venue map
+Crowd heat zones
+Active incidents
+AI recommendations
+Alert history
+Staff activity
+Data source status
+
+Data source status is important:
+
+Venue data: loaded
+Staff reports: active
+AI service: online
+Cache: active
+Maps: online
+
+This makes it look serious.
+
+Page 13: Admin Venue Data
+
+Purpose: manage verified data.
+
+Components
+Gate manager
+Section manager
+Facility manager
+Route manager
+Transport point manager
+Import/export data
+
+This supports our principle:
+
+Verified Data → AI Intelligence → User
+
+So judges see we thought about where facts come from.
+
+Page 14: Settings
+Components
+Profile
+Language
+Role
+Accessibility
+Notification preferences
+Privacy
+Logout
+
+Notification preferences:
+
+Crowd alerts
+Gate updates
+Transport updates
+Accessibility updates
+Emergency alerts
+Navigation structure
+Fan bottom nav
+Home
+Map
+AI Help
+Alerts
+Settings
+Staff sidebar
+Dashboard
+Reports
+Alerts
+Map
+Tasks
+Venue Data
+Settings
+
+
+Main:
+1. Landing
+2. Login / Role selection
+3. Fan Home
+4. AI Assistant
+5. Smart Navigation
+6. Live Alerts
+7. Staff Dashboard
+8. Staff Report Form
+9. Alert Approval
+10. Settings

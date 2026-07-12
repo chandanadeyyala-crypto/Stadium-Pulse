@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "leaflet/dist/leaflet.css";
+@import "tailwindcss";
+
+:root {
+  /* Dark Theme Variables (Default) */
+  --bg-primary: #060b13;
+  --bg-surface: rgba(14, 26, 45, 0.7);
+  --bg-card: rgba(16, 29, 50, 0.55);
+  --bg-electric: #2f80ed;
+  --bg-green: #14b8a6;
+  --bg-amber: #f97316;
+  --bg-red: #ef4444;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.08);
+  
+  --blueprint-grid: rgba(0, 229, 255, 0.03);
+  --blueprint-lines: rgba(0, 229, 255, 0.06);
+
+  --color-nav-accent: #00e5ff;
+  --color-ai-accent: #a855f7;
+  --color-transport-accent: #ff9100;
+  --color-safety-accent: #ef4444;
+  --color-accessibility-accent: #14b8a6;
+}
+
+.theme-light {
+  /* Light Theme Variables */
+  --bg-primary: #f1f5f9;
+  --bg-surface: rgba(255, 255, 255, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-electric: #1d4ed8;
+  --bg-green: #0d9488;
+  --bg-amber: #ea580c;
+  --bg-red: #dc2626;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: rgba(15, 23, 42, 0.08);
+  
+  --blueprint-grid: rgba(47, 128, 237, 0.02);
+  --blueprint-lines: rgba(47, 128, 237, 0.05);
+
+  --color-nav-accent: #0891b2;
+  --color-ai-accent: #7c3aed;
+  --color-transport-accent: #ea580c;
+  --color-safety-accent: #dc2626;
+  --color-accessibility-accent: #0d9488;
+}
+
+/* Base styles */
+@layer base {
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    background-image: 
+      linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px),
+      linear-gradient(var(--blueprint-lines) 2px, transparent 2px),
+      linear-gradient(90deg, var(--blueprint-lines) 2px, transparent 2px);
+    background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+    background-attachment: fixed;
+    background-position: center;
+    antialiased: true;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: font-size 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Accessibility - Font Size Scaling */
+html.large-text {
+  font-size: 115%;
+}
+
+html.large-text-extra {
+  font-size: 130%;
+}
+
+/* Accessibility - High Contrast Mode Override */
+html.high-contrast {
+  --bg-primary: #000000 !important;
+  --bg-surface: #111111 !important;
+  --bg-card: #000000 !important;
+  --bg-electric: #00ffff !important;
+  --bg-green: #00ffff !important;
+  --bg-amber: #ffff00 !important;
+  --bg-red: #ff0000 !important;
+  --text-primary: #ffffff !important;
+  --text-secondary: #e2e8f0 !important;
+  --border-color: #ffffff !important;
+  --blueprint-grid: transparent !important;
+  --blueprint-lines: transparent !important;
+}
+
+html.high-contrast body {
+  background-image: none !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast .glass-panel,
+html.high-contrast .operations-card,
+html.high-contrast .bg-stadiumNavy,
+html.high-contrast .bg-slate-950 {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Operations Tactical Cards (Glassmorphism & Accents) */
+.operations-card, .glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.operations-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+}
+
+/* Feature specific accent highlights */
+.accent-navigation::before { background: var(--color-nav-accent); }
+.accent-ai::before { background: var(--color-ai-accent); }
+.accent-transport::before { background: var(--color-transport-accent); }
+.accent-safety::before { background: var(--color-safety-accent); }
+.accent-accessibility::before { background: var(--color-accessibility-accent); }
+
+/* Accent card glows */
+.accent-navigation { box-shadow: 0 0 15px -5px rgba(0, 229, 255, 0.15); }
+.accent-ai { box-shadow: 0 0 15px -5px rgba(168, 85, 247, 0.15); }
+.accent-transport { box-shadow: 0 0 15px -5px rgba(255, 145, 0, 0.15); }
+.accent-safety { box-shadow: 0 0 15px -5px rgba(239, 68, 68, 0.15); }
+.accent-accessibility { box-shadow: 0 0 15px -5px rgba(20, 184, 166, 0.15); }
+
+/* Hover effects */
+.operations-card:hover, .glass-panel:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.35);
+}
+
+.theme-light .operations-card:hover, .theme-light .glass-panel:hover {
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Adapt standard container backgrounds dynamically */
+.bg-stadiumNavy, .bg-slate-950, .bg-slate-900 {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+.bg-primaryDark {
+  background-color: var(--bg-primary) !important;
+}
+
+.text-textLight {
+  color: var(--text-primary) !important;
+}
+
+.text-textDark {
+  color: var(--text-secondary) !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-electric);
+}
+
+/* Mobile Layout — Targeted Fixes */
+@media (max-width: 767px) {
+  /* Ensure body doesn't overflow horizontally */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Allow cards to stretch full-width on mobile */
+  .operations-card, .glass-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Prevent Navbar from overflowing */
+  nav {
+    overflow-x: hidden;
+  }
+}
+
+/* ── Soccer Ball Animation Scene ──────────────────────────────────── */
+.ball-scene-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.ball-glow {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.25) 0%, rgba(0, 229, 255, 0) 70%);
+  border-radius: 50%;
+  animation: pulseGlow 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ball-wrapper-anim {
+  animation: floatBall 6s ease-in-out infinite;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soccer-ball-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.2));
+  animation: rotateBall 12s ease-in-out infinite;
+}
+
+.orbit-ring-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orbit-ring-1, .orbit-ring-2 {
+  position: absolute;
+  border: 1px dashed rgba(0, 229, 255, 0.2);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+}
+
+.orbit-ring-1 {
+  width: 200px;
+  height: 90px;
+  animation: rotateOrbit1 25s linear infinite;
+}
+
+.orbit-ring-2 {
+  width: 250px;
+  height: 110px;
+  animation: rotateOrbit2 35s linear infinite;
+}
+
+.route-path-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.route-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.route-line {
+  stroke: rgba(0, 229, 255, 0.3);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.route-marker {
+  fill: #00e5ff;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  r: 4.5;
+  filter: drop-shadow(0 0 6px #00e5ff);
+}
+
+.route-marker-alt {
+  fill: #14b8a6;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  r: 4.5;
+  filter: drop-shadow(0 0 6px #14b8a6);
+}
+
+@keyframes floatBall {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rotateBall {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(10deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes rotateOrbit1 {
+  0% { transform: translate(-50%, -50%) rotate(20deg); }
+  100% { transform: translate(-50%, -50%) rotate(380deg); }
+}
+
+@keyframes rotateOrbit2 {
+  0% { transform: translate(-50%, -50%) rotate(-15deg); }
+  100% { transform: translate(-50%, -50%) rotate(-375deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ball-glow, .ball-wrapper-anim, .soccer-ball-img, .orbit-ring-1, .orbit-ring-2 {
+    animation: none !important;
+  }
+  .ball-wrapper-anim { transform: translateY(0) !important; }
+  .soccer-ball-img { transform: rotate(0deg) !important; }
+}
