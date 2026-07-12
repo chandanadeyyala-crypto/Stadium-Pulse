@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { useTranslation } from '../utils/useTranslation';
 import AIMessage from '../components/AIMessage';
 import { 
   Send, 
   Mic, 
   MicOff, 
-  HelpCircle, 
-  AlertTriangle, 
   Loader2,
   Trash2,
   Sparkles
@@ -15,6 +14,7 @@ import {
 
 export default function AIAssistantPage() {
   const { language, setLanguage, speakText, stopSpeaking } = useAccessibility();
+  const { t } = useTranslation();
 
   // Clean up speech on unmount
   useEffect(() => {
@@ -188,8 +188,8 @@ Action: Select a suggested query below or type your question.`
             <Sparkles size={16} />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white leading-tight">StadiumPulse Assistant</h2>
-            <span className="text-[10px] uppercase font-semibold tracking-wider text-pitchGreen">Grounded RAG Bot</span>
+            <h2 className="text-sm font-bold text-white leading-tight">{t('StadiumPulse Assistant')}</h2>
+            <span className="text-[10px] uppercase font-semibold tracking-wider text-pitchGreen">{t('Grounded RAG Bot')}</span>
           </div>
         </div>
 
@@ -225,7 +225,7 @@ Action: Select a suggested query below or type your question.`
         {loading && (
           <div className="flex space-x-3 max-w-[70%] items-center text-xs text-slate-400 py-2 font-medium">
             <Loader2 size={16} className="animate-spin text-electricBlue" />
-            <span>Consulting verified stadium logs...</span>
+            <span>{t('Consulting verified stadium logs...')}</span>
           </div>
         )}
         <div ref={chatEndRef} />
@@ -233,7 +233,7 @@ Action: Select a suggested query below or type your question.`
 
       {/* Suggestions Drawer */}
       <div className="p-3 bg-stadiumNavy/20 border-t border-slate-800/80 space-y-1.5">
-        <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500 block">Suggested Verified Queries</span>
+        <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500 block">{t('Suggested Verified Queries')}</span>
         <div className="flex flex-wrap gap-1.5">
           {suggestedQuestions.map((q, idx) => (
             <button
@@ -271,7 +271,7 @@ Action: Select a suggested query below or type your question.`
 
         <input
           type="text"
-          placeholder={isListening ? "Listening... Speak clearly" : `Ask StadiumPulse AI in ${language}...`}
+          placeholder={isListening ? t('Listening... Speak clearly') : t(`Ask StadiumPulse AI in ${language}...`)}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           disabled={loading || isListening}

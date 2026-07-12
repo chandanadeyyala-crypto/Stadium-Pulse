@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
+import { useTranslation } from '../utils/useTranslation';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function StaffDashboardPage() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState({
     activeIncidents: 4,
     crowdedGates: 1,
@@ -88,8 +90,8 @@ export default function StaffDashboardPage() {
         <div className="flex items-center space-x-2.5">
           <LayoutDashboard className="text-electricBlue" />
           <div>
-            <h1 className="text-xl font-extrabold text-white uppercase tracking-wider">Operations Dashboard</h1>
-            <p className="text-[10px] uppercase font-semibold text-slate-400">Venue staff command center</p>
+            <h1 className="text-xl font-extrabold text-white uppercase tracking-wider">{t('Operations Dashboard')}</h1>
+            <p className="text-[10px] uppercase font-semibold text-slate-400">{t('Venue staff command center')}</p>
           </div>
         </div>
 
@@ -99,13 +101,13 @@ export default function StaffDashboardPage() {
             className="px-4 py-2 bg-electricBlue hover:bg-blue-600 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center space-x-1.5"
           >
             <FileText size={14} />
-            <span>File Incident Report</span>
+            <span>{t('File Incident Report')}</span>
           </Link>
           <Link
             to="/alert-approval"
             className="px-4 py-2 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white text-xs font-semibold rounded-xl transition-all"
           >
-            Review Pending Alerts
+            {t('Review Pending Alerts')}
           </Link>
         </div>
       </div>
@@ -113,10 +115,10 @@ export default function StaffDashboardPage() {
       {/* Metrics Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Active Incidents', count: stats.activeIncidents, color: 'text-criticalRed', icon: AlertOctagon },
-          { label: 'Congested Gates', count: stats.crowdedGates, color: 'text-alertAmber', icon: Flame },
-          { label: 'Live Broadcasts', count: stats.broadcastAlerts, color: 'text-electricBlue', icon: BellRing },
-          { label: 'Active Personnel', count: 12, color: 'text-pitchGreen', icon: Users }
+          { label: t('Active Incidents'), count: stats.activeIncidents, color: 'text-criticalRed', icon: AlertOctagon },
+          { label: t('Congested Gates'), count: stats.crowdedGates, color: 'text-alertAmber', icon: Flame },
+          { label: t('Live Broadcasts'), count: stats.broadcastAlerts, color: 'text-electricBlue', icon: BellRing },
+          { label: t('Active Personnel'), count: 12, color: 'text-pitchGreen', icon: Users }
         ].map((stat, idx) => (
           <div key={idx} className="p-4 rounded-2xl bg-stadiumNavy/40 border border-slate-800 flex items-center justify-between">
             <div className="space-y-1">
@@ -143,8 +145,8 @@ export default function StaffDashboardPage() {
                 <Sparkles size={18} />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">AI Operations Command Panel</h3>
-                <p className="text-[9px] uppercase font-bold text-indigo-400">Gemini Grounded Decision Assistant</p>
+                <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">{t('AI Operations Command Panel')}</h3>
+                <p className="text-[9px] uppercase font-bold text-indigo-400">{t('Gemini Grounded Decision Assistant')}</p>
               </div>
             </div>
 
@@ -169,7 +171,7 @@ export default function StaffDashboardPage() {
           {/* Active Incidents List */}
           <div className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-slate-800">
-              Active Logs & Reports
+              {t('Active Logs & Reports')}
             </h3>
             
             {loading ? (
@@ -189,7 +191,7 @@ export default function StaffDashboardPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">No active incidents filed.</p>
+              <p className="text-xs text-slate-500">{t('No active incidents filed.')}</p>
             )}
           </div>
 
@@ -202,7 +204,7 @@ export default function StaffDashboardPage() {
           <div className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4" id="tasks">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-slate-800 flex items-center space-x-1.5">
               <ClipboardList size={15} className="text-slate-400" />
-              <span>Volunteer Assignments</span>
+              <span>{t('Volunteer Assignments')}</span>
             </h3>
 
             <div className="space-y-3">
@@ -232,7 +234,7 @@ export default function StaffDashboardPage() {
           {/* Crowd Heat Status Card */}
           <div className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-slate-800">
-              Gate Congestion Heat
+              {t('Gate Congestion Heat')}
             </h3>
 
             <div className="space-y-3">

@@ -92,3 +92,176 @@ html.high-contrast .border-electricBlue {
 ::-webkit-scrollbar-thumb:hover {
   background: #2F80ED;
 }
+
+/* ── Soccer Ball Animation Scene ──────────────────────────────────── */
+
+.ball-scene-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Glowing background behind the ball */
+.ball-glow {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(47, 128, 237, 0.3) 0%, rgba(47, 128, 237, 0) 70%);
+  border-radius: 50%;
+  animation: pulseGlow 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Floating & Rotating Ball Wrapper */
+.ball-wrapper-anim {
+  animation: floatBall 6s ease-in-out infinite;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soccer-ball-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 15px rgba(47, 128, 237, 0.3));
+  animation: rotateBall 12s ease-in-out infinite;
+}
+
+/* Slowly rotating orbit rings */
+.orbit-ring-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orbit-ring-1, .orbit-ring-2 {
+  position: absolute;
+  border: 1px dashed rgba(47, 128, 237, 0.25);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+}
+
+.orbit-ring-1 {
+  width: 200px;
+  height: 90px;
+  animation: rotateOrbit1 25s linear infinite;
+}
+
+.orbit-ring-2 {
+  width: 250px;
+  height: 110px;
+  animation: rotateOrbit2 35s linear infinite;
+}
+
+/* Route line / command path styling */
+.route-path-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.route-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.route-line {
+  stroke: rgba(47, 128, 237, 0.35);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.route-marker {
+  fill: #2f80ed;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  r: 4.5;
+  filter: drop-shadow(0 0 6px #2f80ed);
+}
+
+.route-marker-alt {
+  fill: #27ae60;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  r: 4.5;
+  filter: drop-shadow(0 0 6px #27ae60);
+}
+
+/* Keyframe definitions */
+
+@keyframes floatBall {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rotateBall {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateOrbit1 {
+  0% {
+    transform: translate(-50%, -50%) rotate(20deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(380deg);
+  }
+}
+
+@keyframes rotateOrbit2 {
+  0% {
+    transform: translate(-50%, -50%) rotate(-15deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-375deg);
+  }
+}
+
+/* Support for prefers-reduced-motion accessibility preference */
+@media (prefers-reduced-motion: reduce) {
+  .ball-glow,
+  .ball-wrapper-anim,
+  .soccer-ball-img,
+  .orbit-ring-1,
+  .orbit-ring-2 {
+    animation: none !important;
+  }
+  .ball-wrapper-anim {
+    transform: translateY(0) !important;
+  }
+  .soccer-ball-img {
+    transform: rotate(0deg) !important;
+  }
+}
+

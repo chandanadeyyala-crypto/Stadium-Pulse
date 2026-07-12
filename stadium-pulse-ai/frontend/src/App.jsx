@@ -19,6 +19,7 @@ import AlertApprovalPage from './pages/AlertApprovalPage';
 import CommandCenterPage from './pages/CommandCenterPage';
 import AdminVenuePage from './pages/AdminVenuePage';
 import SettingsPage from './pages/SettingsPage';
+import TellProblemPage from './pages/TellProblemPage';
 
 // Layout Components
 import Navbar from './components/Navbar';
@@ -53,7 +54,7 @@ function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isPublicRoute = ['/', '/login'].includes(location.pathname);
+  const isPublicRoute = ['/', '/login', '/tell-problem'].includes(location.pathname);
   const isStaff = user && ['volunteer', 'staff', 'organizer'].includes(user.role);
   const showBackButton = !['/fan-home', '/staff-dashboard', '/organizer-command', '/login', '/'].includes(location.pathname);
 
@@ -83,6 +84,7 @@ function AppShell() {
             {/* Public routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/tell-problem" element={<TellProblemPage />} />
 
             {/* Fan-only routes */}
             <Route path="/fan-home" element={<ProtectedRoute allowedRoles={['fan']}><FanHomePage /></ProtectedRoute>} />

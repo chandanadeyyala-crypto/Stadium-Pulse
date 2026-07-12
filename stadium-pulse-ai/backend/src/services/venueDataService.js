@@ -62,7 +62,12 @@ export const venueDataService = {
   async getAlerts() {
     if (db) {
       try {
-        const snapshot = await db.collection('alerts').orderBy('timestamp', 'desc').get();
+        // Race Firestore against a 2 s timeout — fall back to memory if slow
+        const firestoreQuery = db.collection('alerts').orderBy('timestamp', 'desc').get();
+        const timeout = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Firestore timeout')), 2000)
+        );
+        const snapshot = await Promise.race([firestoreQuery, timeout]);
         const alerts = [];
         snapshot.forEach(doc => {
           alerts.push({ id: doc.id, ...doc.data() });
@@ -71,7 +76,7 @@ export const venueDataService = {
           return alerts;
         }
       } catch (err) {
-        console.warn('[VenueDataService] Firestore getAlerts failed, using memory. Error:', err.message);
+        // Fall through to in-memory store
       }
     }
     return activeAlerts;

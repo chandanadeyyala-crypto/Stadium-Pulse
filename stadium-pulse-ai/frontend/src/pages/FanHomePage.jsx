@@ -32,18 +32,18 @@ export default function FanHomePage() {
     const fetchAlerts = async () => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-        const response = await axios.get(`${backendUrl}/api/alerts`);
+        const response = await axios.get(`${backendUrl}/api/alerts`, { timeout: 3000 });
         setAlerts(response.data.slice(0, 2)); // Show top 2 active alerts on home
       } catch (err) {
-        console.error('Failed to load alerts on dashboard:', err.message);
+        // Keep previous alerts on timeout/error
       } finally {
         setLoadingAlerts(false);
       }
     };
     fetchAlerts();
-    
-    // Refresh every 15s
-    const interval = setInterval(fetchAlerts, 15000);
+
+    // Refresh every 8s
+    const interval = setInterval(fetchAlerts, 8000);
     return () => clearInterval(interval);
   }, []);
 

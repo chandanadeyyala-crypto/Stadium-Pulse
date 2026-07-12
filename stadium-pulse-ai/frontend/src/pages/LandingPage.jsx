@@ -1,17 +1,9 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import FeatureCard from '../components/FeatureCard';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../utils/useTranslation';
-import { 
-  Navigation, 
-  Languages, 
-  AlertTriangle, 
-  Accessibility, 
-  Brain, 
-  ShieldAlert 
-} from 'lucide-react';
-
+import { ShieldCheck, Navigation, Languages, Accessibility } from 'lucide-react';
+import soccerBall from '../assets/soccer-ball.svg';
 export default function LandingPage() {
   const navigate = useNavigate();
   const { signInAsDemoRole } = useAuth();
@@ -26,142 +18,178 @@ export default function LandingPage() {
     }
   };
 
+  const DEMO_ROLES = [
+    {
+      role: 'fan',
+      emoji: '🎫',
+      label: 'Fan',
+      desc: 'Navigate, query AI, access your seat route.',
+      color: 'border-electricBlue/40 hover:border-electricBlue',
+    },
+    {
+      role: 'staff',
+      emoji: '🛡️',
+      label: 'Staff',
+      desc: 'Report incidents, approve alert drafts.',
+      color: 'border-alertAmber/40 hover:border-alertAmber',
+    },
+    {
+      role: 'organizer',
+      emoji: '⚡',
+      label: 'Command Center',
+      desc: 'Crowd maps, broadcast control, analytics.',
+      color: 'border-criticalRed/40 hover:border-criticalRed',
+    },
+  ];
+
+  const FEATURES = [
+    { icon: Navigation, label: 'Smart Routing', color: 'text-pitchGreen' },
+    { icon: Languages, label: 'AI Translation', color: 'text-alertAmber' },
+    { icon: Accessibility, label: 'Accessibility', color: 'text-indigo-400' },
+    { icon: ShieldCheck, label: 'Anti-Hallucination', color: 'text-electricBlue' },
+  ];
+
   return (
-    <div className="min-h-screen bg-primaryDark text-slate-100 flex flex-col justify-between selection:bg-electricBlue selection:text-white">
-      {/* Landing Navbar */}
-      <header className="px-6 py-4 flex justify-between items-center border-b border-slate-800 bg-stadiumNavy/20 sticky top-0 backdrop-blur-md z-50">
-        <div className="flex items-center space-x-2">
-          <div className="bg-electricBlue text-white p-2 rounded-lg font-bold">🏟️</div>
-          <span className="font-extrabold text-xl tracking-tight text-white">
-            StadiumPulse <span className="text-electricBlue">AI</span>
+    <div className="min-h-screen bg-primaryDark text-slate-100 flex flex-col selection:bg-electricBlue selection:text-white">
+
+      {/* ── Sticky top bar ─────────────────────────────────────────────── */}
+      <header className="px-6 py-3 flex justify-between items-center border-b border-slate-800 bg-stadiumNavy/20 sticky top-0 backdrop-blur-md z-50">
+        <div className="flex items-center space-x-2 select-none">
+          <div className="bg-electricBlue text-white p-1.5 rounded-lg font-bold text-sm">🏟️</div>
+          <span className="font-extrabold text-lg tracking-tight text-white">
+            StadiumFlow <span className="text-electricBlue">AI</span>
           </span>
         </div>
-        <Link 
-          to="/login"
-          className="px-4 py-2 border border-slate-700 hover:border-slate-500 rounded-xl text-sm font-semibold transition-all"
-        >
-          {t("Sign In")}
-        </Link>
+        <div className="flex items-center space-x-3">
+          <Link
+            to="/login"
+            className="px-4 py-1.5 border border-slate-700 hover:border-slate-400 rounded-xl text-xs font-semibold transition-all cursor-pointer"
+          >
+            {t('Sign In')}
+          </Link>
+        </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="flex-1 max-w-6xl mx-auto px-6 py-12 flex flex-col items-center justify-center text-center space-y-12">
-        <div className="space-y-6 max-w-3xl">
-          {/* Tagline Badge */}
-          <span className="inline-flex items-center space-x-1.5 px-3 py-1 bg-blue-500/10 text-electricBlue border border-electricBlue/20 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse">
-            <span>{t("FIFA World Cup 2026 Operations Prototype")}</span>
-          </span>
-
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-            {t("Real-time stadium intelligence grounded in")} <span className="text-electricBlue">{t("verified facts.")}</span>
-          </h1>
-
-          <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
-            {t("AI-powered indoor navigation, multilingual assistant chat, and staff command decisions — utilizing strict anti-hallucination guardrails to keep matchday safe, smooth, and accessible.")}
-          </p>
-        </div>
-
-        {/* Call to Actions / Demo Role Selectors */}
-        <div className="w-full max-w-4xl glass-panel p-6 md:p-8 rounded-3xl border border-slate-800 space-y-6">
-          <h2 className="text-xl font-bold text-white">{t("Select a Demo Role to Test the Platform")}</h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Fan Card */}
-            <button 
-              onClick={() => handleDemoMode('fan')}
-              className="p-5 rounded-2xl bg-stadiumNavy border border-slate-700 hover:border-electricBlue text-left flex flex-col space-y-2 transition-all hover:scale-[1.02] shadow-lg group cursor-pointer"
-            >
-              <div className="text-2xl text-pitchGreen">🎫</div>
-              <h3 className="font-extrabold text-white text-lg group-hover:text-electricBlue transition-colors">{t("Continue as Fan")}</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">{t("View ticket details, query AI, get crowd-aware routes, and manage accessibility options.")}</p>
-            </button>
-
-            {/* Staff Card */}
-            <button 
-              onClick={() => handleDemoMode('staff')}
-              className="p-5 rounded-2xl bg-stadiumNavy border border-slate-700 hover:border-electricBlue text-left flex flex-col space-y-2 transition-all hover:scale-[1.02] shadow-lg group cursor-pointer"
-            >
-              <div className="text-2xl text-alertAmber">🛡️</div>
-              <h3 className="font-extrabold text-white text-lg group-hover:text-electricBlue transition-colors">{t("Staff Dashboard")}</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">{t("Report incidents in any language, verify AI drafts, and manage volunteer tasks.")}</p>
-            </button>
-
-            {/* Organizer Card */}
-            <button 
-              onClick={() => handleDemoMode('organizer')}
-              className="p-5 rounded-2xl bg-stadiumNavy border border-slate-700 hover:border-electricBlue text-left flex flex-col space-y-2 transition-all hover:scale-[1.02] shadow-lg group cursor-pointer"
-            >
-              <div className="text-2xl text-criticalRed">⚡</div>
-              <h3 className="font-extrabold text-white text-lg group-hover:text-electricBlue transition-colors">{t("Command Center")}</h3>
-              <p className="text-xs text-slate-400 leading-relaxed font-medium">{t("View full venue crowd maps, approve urgent alert broadcasts, and inspect operational integrity.")}</p>
-            </button>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-500 font-semibold border-t border-slate-800 pt-4">
-            <span className="flex items-center space-x-1">
-              <ShieldAlert size={14} className="text-pitchGreen" />
-              <span>{t("Anti-Hallucination Active")}</span>
+      {/* ── Hero (title + animated ball) ──────────────────────────────────────── */}
+      <main className="flex-1 max-w-5xl mx-auto px-6 py-10 flex flex-col gap-10">
+        
+        {/* Hero section */}
+        <section className="flex flex-col md:flex-row items-center justify-between gap-12 pt-4">
+          {/* Left side – text & CTAs */}
+          <div className="flex-1 space-y-6">
+            <span className="inline-block px-3 py-1 bg-blue-500/10 text-electricBlue border border-electricBlue/20 rounded-full text-[10px] font-bold uppercase tracking-widest">
+              FIFA World Cup 2026 · Operations Platform
             </span>
-            <span>•</span>
-            <span>{t("Leaflet + OpenStreetMap maps")}</span>
-            <span>•</span>
-            <span>{t("Gemini Flash & Groq pipeline")}</span>
+            <h1 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+              {t('Stadium')}<br />
+              <span className="text-electricBlue">{t('Intelligence')}</span>
+            </h1>
+            <p className="text-sm text-slate-400 leading-relaxed max-w-md font-medium">
+              {t('AI-powered navigation, multilingual chat, and crowd-aware routing — for fans, staff and command centers.')}
+            </p>
+
+            {/* Two compact CTA buttons */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              <button
+                onClick={() => {
+                  const el = document.getElementById('demo-selector');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-5 py-2.5 bg-electricBlue hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              >
+                {t('Explore Demo')}
+              </button>
+              <button
+                onClick={() => navigate('/login')}
+                className="px-5 py-2.5 border border-slate-700 hover:border-slate-500 hover:bg-slate-800/40 text-white rounded-xl text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              >
+                {t('Sign In')}
+              </button>
+            </div>
+
+            {/* Feature pill strip */}
+            <div className="flex flex-wrap gap-2 pt-2">
+              {FEATURES.map(({ icon: Icon, label, color }) => (
+                <span key={label} className="flex items-center space-x-1.5 bg-stadiumNavy border border-slate-800 rounded-full px-3 py-1 text-[11px] font-semibold text-slate-300">
+                  <Icon size={12} className={color} />
+                  <span>{t(label)}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right side – animated soccer ball visual */}
+          <div className="flex-shrink-0 flex items-center justify-center md:pr-6" aria-hidden="true">
+            <div className="ball-scene-container">
+              {/* Electric blue glow */}
+              <div className="ball-glow" aria-hidden="true" />
+              
+              {/* Faint orbit rings */}
+              <div className="orbit-ring-container" aria-hidden="true">
+                <div className="orbit-ring-1" />
+                <div className="orbit-ring-2" />
+              </div>
+
+              {/* Faint route path with two location markers */}
+              <div className="route-path-container" aria-hidden="true">
+                <svg className="route-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+                  {/* Dashed route line */}
+                  <path d="M 40,200 Q 140,50 240,200" fill="none" className="route-line" />
+                  {/* Location markers */}
+                  <circle cx="40" cy="200" className="route-marker" />
+                  <circle cx="240" cy="200" className="route-marker-alt" />
+                </svg>
+              </div>
+
+              {/* Floating and rotating soccer ball */}
+              <div className="ball-wrapper-anim">
+                <img 
+                  src={soccerBall} 
+                  alt="" 
+                  className="soccer-ball-img"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Demo role selector ───────────────────────────────────────────── */}
+        <div id="demo-selector" className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-5">
+          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+            {t('Try the platform — choose a role')}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {DEMO_ROLES.map(({ role, emoji, label, desc, color }) => (
+              <button
+                key={role}
+                onClick={() => handleDemoMode(role)}
+                className={`p-5 rounded-2xl bg-stadiumNavy border ${color} text-left flex flex-col space-y-2 transition-all hover:scale-[1.02] shadow-lg group cursor-pointer`}
+              >
+                <span className="text-2xl">{emoji}</span>
+                <h3 className="font-extrabold text-white text-base group-hover:text-electricBlue transition-colors">
+                  {t(label)}
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed font-medium">{t(desc)}</p>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 text-[10px] text-slate-500 font-semibold border-t border-slate-800 pt-4">
+            <ShieldCheck size={12} className="text-pitchGreen" />
+            <span>{t('Anti-Hallucination Active')}</span>
+            <span>·</span>
+            <span>{t('Gemini Flash & Groq pipeline')}</span>
+            <span>·</span>
+            <span>{t('OpenStreetMap navigation')}</span>
           </div>
         </div>
 
-        {/* Feature Grid */}
-        <div className="w-full space-y-8">
-          <div className="text-center space-y-2">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white">{t("Features Built for FIFA Matchday")}</h2>
-            <p className="text-xs md:text-sm text-slate-400 font-medium">{t("Click and test each module inside the platform dashboards.")}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <FeatureCard 
-              title={t("Smart Venue Routing")} 
-              description={t("Calculate directions inside the stadium. Switch preferences between Fastest, Least Congested, or Wheelchair/Stroller accessible paths.")}
-              icon={Navigation}
-              colorClass="text-pitchGreen"
-            />
-            <FeatureCard 
-              title={t("AI Assistant grounding")} 
-              description={t("Queries are RAG-grounded. The assistant strictly answers from verified infrastructure records and logs, preventing fake directions.")}
-              icon={Brain}
-              colorClass="text-electricBlue"
-            />
-            <FeatureCard 
-              title={t("Instant Alert Translation")} 
-              description={t("Broadcaster translates alert messages to any fan preference in real-time. Translates staff incident notes automatically.")}
-              icon={Languages}
-              colorClass="text-alertAmber"
-            />
-            <FeatureCard 
-              title={t("Access Center")} 
-              description={t("Customize user scaling, toggle high-contrast display, toggle Speech Synthesis (TTS), and find closest elevators or medical stands.")}
-              icon={Accessibility}
-              colorClass="text-indigo-400"
-            />
-            <FeatureCard 
-              title={t("SOS Emergency Assistance")} 
-              description={t("One-click emergency broadcast trigger that maps your GPS coordinates and section layout to command center staff instantly.")}
-              icon={ShieldAlert}
-              colorClass="text-criticalRed"
-            />
-            <FeatureCard 
-              title={t("Alert Approvals Workflow")} 
-              description={t("Staff reports incidents in any dialect; AI extracts details, drafts fan updates, and holds for organizer review before publishing.")}
-              icon={AlertTriangle}
-              colorClass="text-teal-400"
-            />
-          </div>
-        </div>
       </main>
 
-      {/* Landing Footer */}
-      <footer className="px-6 py-6 border-t border-slate-800 text-center text-xs text-slate-500 bg-stadiumNavy/10 space-y-2">
-        <p>{t("© FIFA World Cup 2026 Operations Assistance System. All rights reserved.")}</p>
-        <p className="font-mono">{t("Status: Sandbox Mock Mode · Powered by Google Gemini")}</p>
+      <footer className="px-6 py-4 border-t border-slate-800 text-center text-[10px] text-slate-600 bg-stadiumNavy/10">
+        {t('© FIFA World Cup 2026 Operations Prototype. Sandbox mode.')}
       </footer>
+
     </div>
   );
 }

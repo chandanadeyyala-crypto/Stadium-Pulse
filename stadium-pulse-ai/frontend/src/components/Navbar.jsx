@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { useTranslation } from '../utils/useTranslation';
 import { 
   ShieldAlert, 
   SunMoon, 
@@ -14,7 +15,8 @@ import {
   Volume2,
   VolumeX,
   UserCheck,
-  Bell
+  Bell,
+  HelpCircle
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -25,6 +27,7 @@ export default function Navbar() {
     speechEnabled, setSpeechEnabled,
     language, setLanguage 
   } = useAccessibility();
+  const { t } = useTranslation();
   
   const [langOpen, setLangOpen] = useState(false);
   const [sosActive, setSosActive] = useState(false);
@@ -34,21 +37,22 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!user) return;
-    
+
     const fetchAlertCount = async () => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-        const response = await axios.get(`${backendUrl}/api/alerts`);
+        // 3 s timeout so Firestore delays never block the UI
+        const response = await axios.get(`${backendUrl}/api/alerts`, { timeout: 3000 });
         if (Array.isArray(response.data)) {
           setActiveAlertCount(response.data.length);
         }
       } catch (err) {
-        console.error('Navbar: Failed to fetch alert count:', err.message);
+        // Silently fail — badge just keeps old count
       }
     };
-    
+
     fetchAlertCount();
-    const interval = setInterval(fetchAlertCount, 15000);
+    const interval = setInterval(fetchAlertCount, 8000); // refresh every 8 s
     return () => clearInterval(interval);
   }, [user]);
 
@@ -125,6 +129,18 @@ export default function Navbar() {
           </Link>
         )}
 
+        {/* Query Button - visible with label */}
+        {user && (
+          <Link
+            to="/tell-problem"
+            className="p-2 rounded-lg bg-stadiumNavy border border-slate-700 text-slate-300 hover:text-electricBlue hover:border-electricBlue/40 flex items-center space-x-1.5 transition-all"
+            title="Query - Ask in any language"
+          >
+            <HelpCircle size={16} />
+            <span className="hidden md:inline text-xs font-semibold">{t('Query')}</span>
+          </Link>
+        )}
+
         {/* Accessibility Quick Toggles */}
         {/* Contrast Toggle */}
         <button
@@ -171,13 +187,17 @@ export default function Navbar() {
           
           {langOpen && (
             <div className="absolute right-0 mt-2 w-40 rounded-lg bg-stadiumNavy border border-slate-700 shadow-xl overflow-hidden z-50">
+              {/* Language names always displayed in English regardless of selected language */}
               {['English', 'Spanish', 'French', 'German', 'Hindi', 'Telugu'].map((lang) => (
                 <button
                   key={lang}
                   onClick={() => handleLanguageChange(lang)}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-electricBlue hover:text-white ${language === lang ? 'bg-slate-700 text-white' : 'text-slate-300'}`}
+                  className={`w-full text-left px-3 py-2 text-xs hover:bg-electricBlue hover:text-white flex items-center justify-between ${
+                    language === lang ? 'bg-slate-700 text-white' : 'text-slate-300'
+                  }`}
                 >
-                  {lang}
+                  <span>{lang}</span>
+                  {language === lang && <span className="text-[8px] font-black text-electricBlue">✓</span>}
                 </button>
               ))}
             </div>
