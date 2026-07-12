@@ -6,12 +6,13 @@ import L from 'leaflet';
 import RouteCard from '../components/RouteCard';
 import StatusBadge from '../components/StatusBadge';
 import { useAccessibility } from '../context/AccessibilityContext';
-import { 
-  Navigation, 
-  MapPin, 
-  Settings, 
-  AlertTriangle, 
-  HelpCircle, 
+import { useTranslation } from '../utils/useTranslation';
+import {
+  Navigation,
+  MapPin,
+  Settings,
+  AlertTriangle,
+  HelpCircle,
   Loader2,
   Undo
 } from 'lucide-react';
@@ -64,12 +65,13 @@ function MapRecenter({ coords }) {
 export default function SmartNavigationPage() {
   const locationState = useLocation().state || {};
   const { routePreference } = useAccessibility();
+  const { t } = useTranslation();
 
   // Route calculation selections
   const [start, setStart] = useState(locationState.startNode || 'Gate B');
   const [end, setEnd] = useState(locationState.destinationNode || 'Section 214');
   const [preference, setPreference] = useState(locationState.prefOverride || routePreference);
-  
+
   const [routeData, setRouteData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -92,7 +94,7 @@ export default function SmartNavigationPage() {
   // Compute route
   const handleCalculateRoute = async () => {
     if (start === end) {
-      setError('Start and destination nodes cannot be identical.');
+      setError(t('Start and destination nodes cannot be identical.'));
       setRouteData(null);
       return;
     }
@@ -101,8 +103,8 @@ export default function SmartNavigationPage() {
     setError('');
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const token = localStorage.getItem('stadiumpulse_user') 
-        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token 
+      const token = localStorage.getItem('stadiumpulse_user')
+        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token
         : '';
 
       const response = await axios.post(`${backendUrl}/api/routes/recommend`, {
@@ -121,7 +123,7 @@ export default function SmartNavigationPage() {
       }
     } catch (err) {
       console.error('Route calculation error:', err.message);
-      setError(err.response?.data?.message || 'Failed to calculate path. Verify connections.');
+      setError(err.response?.data?.message || t('Failed to calculate path. Verify connections.'));
       setRouteData(null);
     } finally {
       setLoading(false);
@@ -142,71 +144,70 @@ export default function SmartNavigationPage() {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
-      
+
       {/* Page Header */}
       <div className="flex items-center space-x-2">
         <Navigation className="text-pitchGreen" />
-        <h1 className="text-xl font-extrabold text-white uppercase tracking-wider">Smart Navigation</h1>
+        <h1 className="text-xl font-extrabold text-white uppercase tracking-wider">{t("Smart Navigation")}</h1>
       </div>
 
       {/* Grid: Map and Controls */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Controls Column */}
         <div className="lg:col-span-1 space-y-4">
           <div className="glass-panel p-4 rounded-2xl border border-slate-800 space-y-4">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider pb-2 border-b border-slate-800 flex items-center space-x-1">
               <Settings size={14} className="text-slate-400" />
-              <span>Route Planner Inputs</span>
+              <span>{t("Route Planner Inputs")}</span>
             </h3>
 
             {/* Start Node */}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Current Position</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase">{t("Current Position")}</label>
               <select
                 value={start}
                 onChange={(e) => setStart(e.target.value)}
-                className="w-full bg-stadiumNavy border border-slate-700 rounded-xl py-2 px-3 text-xs font-bold text-white outline-none"
+                className="w-full bg-stadiumNavy border border-slate-700 rounded-xl py-2 px-3 text-xs font-bold text-white outline-none cursor-pointer"
               >
                 {nodeOptions.map(node => (
-                  <option key={node} value={node}>{node}</option>
+                  <option key={node} value={node}>{t(node)}</option>
                 ))}
               </select>
             </div>
 
             {/* Destination Node */}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Target Destination</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase">{t("Target Destination")}</label>
               <select
                 value={end}
                 onChange={(e) => setEnd(e.target.value)}
-                className="w-full bg-stadiumNavy border border-slate-700 rounded-xl py-2 px-3 text-xs font-bold text-white outline-none"
+                className="w-full bg-stadiumNavy border border-slate-700 rounded-xl py-2 px-3 text-xs font-bold text-white outline-none cursor-pointer"
               >
                 {nodeOptions.map(node => (
-                  <option key={node} value={node}>{node}</option>
+                  <option key={node} value={node}>{t(node)}</option>
                 ))}
               </select>
             </div>
 
             {/* Route Preferences Selector */}
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-slate-400 uppercase block">Route Mode Preference</label>
+              <label className="text-[10px] font-bold text-slate-400 uppercase block">{t("Route Mode Preference")}</label>
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { id: 'fastest', name: '⚡ Fastest Route' },
-                  { id: 'least_crowded', name: '🔥 Least Crowded' },
-                  { id: 'wheelchair', name: '♿ Wheelchair Accessible' },
-                  { id: 'family', name: '👶 Family Friendly' },
-                  { id: 'emergency', name: '🚨 Emergency Exit' }
+                  { id: 'fastest', name: t('⚡ Fastest Route') },
+                  { id: 'least_crowded', name: t('🔥 Least Crowded') },
+                  { id: 'wheelchair', name: t('♿ Wheelchair Accessible') },
+                  { id: 'family', name: t('👶 Family Friendly') },
+                  { id: 'emergency', name: t('🚨 Emergency Exit') }
                 ].map(pref => (
                   <button
                     key={pref.id}
                     onClick={() => setPreference(pref.id)}
-                    className={`text-left px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
-                      preference === pref.id
+                    className={`text-left px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${preference === pref.id
                         ? 'bg-electricBlue/20 border-electricBlue text-white shadow-lg'
                         : 'bg-stadiumNavy/40 border-slate-800 text-slate-400 hover:text-slate-200'
-                    }`}
+                      }`}
                   >
                     {pref.name}
                   </button>
@@ -225,29 +226,29 @@ export default function SmartNavigationPage() {
 
         {/* Map Rendering Column */}
         <div className="lg:col-span-2 space-y-4">
-          
+
           {/* Active node crowd alert checks */}
           {alerts.some(a => a.target === start || a.target === end) && (
             <div className="bg-amber-500/15 border border-amber-500/30 p-3 rounded-2xl flex items-center space-x-2 text-xs text-alertAmber font-medium leading-relaxed">
               <AlertTriangle size={18} className="shrink-0 animate-bounce" />
-              <span>Warning: Active congestion warnings are reported at your selection nodes. Routing is recalculating bypass weights.</span>
+              <span>{t("Warning: Active congestion warnings are reported at your selection nodes. Routing is recalculating bypass weights.")}</span>
             </div>
           )}
 
           {/* Leaflet Map Card */}
           <div className="h-[320px] md:h-[400px] rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
-            
+
             {/* Loading Indicator */}
             {loading && (
               <div className="absolute inset-0 bg-primaryDark/60 backdrop-blur-sm z-30 flex items-center justify-center space-x-2 text-xs font-bold text-white">
                 <Loader2 size={16} className="animate-spin text-electricBlue" />
-                <span>Rerouting pathway...</span>
+                <span>{t("Rerouting pathway...")}</span>
               </div>
             )}
 
-            <MapContainer 
-              center={STADIUM_CENTER} 
-              zoom={17} 
+            <MapContainer
+              center={STADIUM_CENTER}
+              zoom={17}
               scrollWheelZoom={false}
               className="h-full w-full"
               style={{ background: "#08111F" }}
@@ -257,16 +258,16 @@ export default function SmartNavigationPage() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              
+
               <MapRecenter coords={routePolylineCoords} />
 
               {/* Draw Route Path Polyline */}
               {routePolylineCoords.length > 0 && (
-                <Polyline 
-                  positions={routePolylineCoords} 
-                  color={preference === 'wheelchair' ? '#00B894' : preference === 'emergency' ? '#EB5757' : '#2F80ED'} 
-                  weight={5} 
-                  opacity={0.85} 
+                <Polyline
+                  positions={routePolylineCoords}
+                  color={preference === 'wheelchair' ? '#00B894' : preference === 'emergency' ? '#EB5757' : '#2F80ED'}
+                  weight={5}
+                  opacity={0.85}
                   dashArray={preference === 'emergency' ? '10, 10' : undefined}
                 />
               )}
@@ -286,8 +287,8 @@ export default function SmartNavigationPage() {
                   <Marker key={name} position={coords} icon={icon}>
                     <Popup className="stadium-popup">
                       <div className="p-1 space-y-1 font-sans">
-                        <h4 className="text-xs font-bold text-slate-800">{name}</h4>
-                        <span className="text-[9px] uppercase font-bold text-slate-500 bg-slate-100 px-1 rounded">{type}</span>
+                        <h4 className="text-xs font-bold text-slate-800">{t(name)}</h4>
+                        <span className="text-[9px] uppercase font-bold text-slate-500 bg-slate-100 px-1 rounded">{t(type)}</span>
                       </div>
                     </Popup>
                   </Marker>

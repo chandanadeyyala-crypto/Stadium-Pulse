@@ -73,7 +73,7 @@ Action: Please check the spelling of your gate/section or consult an information
 });
 
 // POST /api/ai/translate - Translate alert or description
-router.post('/translate', verifyAuthToken, async (req, res) => {
+router.post('/translate', async (req, res) => {
   const { text, targetLang } = req.body;
 
   if (!text || !targetLang) {

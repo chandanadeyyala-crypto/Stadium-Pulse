@@ -14,8 +14,7 @@ import {
   Volume2,
   VolumeX,
   UserCheck,
-  Bell,
-  ArrowLeft
+  Bell
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -32,12 +31,6 @@ export default function Navbar() {
   const [activeAlertCount, setActiveAlertCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
-
-  const showBackButton = !['/fan-home', '/staff-dashboard', '/organizer-command', '/login', '/'].includes(location.pathname);
-
-  const handleBack = () => {
-    navigate(-1);
-  };
 
   useEffect(() => {
     if (!user) return;
@@ -83,18 +76,8 @@ export default function Navbar() {
 
   return (
     <nav className="glass-panel sticky top-0 z-50 px-4 py-3 flex items-center justify-between">
-      {/* Brand Logo & Back button */}
+      {/* Brand Logo */}
       <div className="flex items-center space-x-3">
-        {showBackButton && (
-          <button
-            onClick={handleBack}
-            className="p-1.5 rounded-lg bg-stadiumNavy border border-slate-700 text-slate-300 hover:text-white flex items-center space-x-1 hover:scale-105 transition-all cursor-pointer shrink-0"
-            title="Go Back"
-          >
-            <ArrowLeft size={16} />
-            <span className="text-xs font-bold hidden sm:inline">Back</span>
-          </button>
-        )}
         <div className="flex items-center space-x-2 select-none">
           <div className="bg-electricBlue text-white p-2 rounded-lg font-bold flex items-center justify-center">
             🏟️

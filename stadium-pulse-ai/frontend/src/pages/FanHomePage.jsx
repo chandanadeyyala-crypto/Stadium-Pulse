@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { useTranslation } from '../utils/useTranslation';
 import StatusBadge from '../components/StatusBadge';
 import AlertCard from '../components/AlertCard';
 import { 
@@ -20,7 +21,8 @@ import axios from 'axios';
 
 export default function FanHomePage() {
   const { user } = useAuth();
-  const { routePreference, language } = useAccessibility();
+  const { routePreference } = useAccessibility();
+  const { t } = useTranslation();
   const [alerts, setAlerts] = useState([]);
   const [loadingAlerts, setLoadingAlerts] = useState(true);
   const navigate = useNavigate();
@@ -61,12 +63,12 @@ export default function FanHomePage() {
       {/* Top Welcome Status Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-stadiumNavy/40 border border-slate-800 rounded-2xl gap-3">
         <div>
-          <h2 className="text-xl font-bold text-white">Welcome back, {user?.displayName || 'Fan'} ⚽</h2>
-          <p className="text-xs text-slate-400 font-medium mt-0.5">Let's guide you to your seat safely. All details are grounded in verified venue registers.</p>
+          <h2 className="text-xl font-bold text-white">{t("Welcome back,")} {user?.displayName || t('Fan')} ⚽</h2>
+          <p className="text-xs text-slate-400 font-medium mt-0.5">{t("Let's guide you to your seat safely. All details are grounded in verified venue registers.")}</p>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-xs font-semibold text-slate-400">Matchday Status:</span>
-          <StatusBadge status="open" text="Gates Active" />
+          <span className="text-xs font-semibold text-slate-400">{t("Matchday Status:")}</span>
+          <StatusBadge status="open" text={t("Gates Active")} />
         </div>
       </div>
 
@@ -76,20 +78,20 @@ export default function FanHomePage() {
         {/* Match / Ticket Details Card */}
         <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-800">
-            <span className="text-xs font-bold text-electricBlue uppercase tracking-wider">Your Digital Match Ticket</span>
-            <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono font-bold">MATCH 48</span>
+            <span className="text-xs font-bold text-electricBlue uppercase tracking-wider">{t("Your Digital Match Ticket")}</span>
+            <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono font-bold">{t("MATCH 48")}</span>
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-2xl font-black text-white">Brazil vs Germany</h3>
+            <h3 className="text-2xl font-black text-white">{t("Brazil vs Germany")}</h3>
             <div className="flex flex-wrap gap-3 text-xs text-slate-300 font-medium">
               <span className="flex items-center space-x-1">
                 <Calendar size={13} className="text-slate-400" />
-                <span>July 8, 2026 · 7:30 PM Kickoff</span>
+                <span>{t("July 8, 2026 · 7:30 PM Kickoff")}</span>
               </span>
               <span className="flex items-center space-x-1">
                 <MapPin size={13} className="text-slate-400" />
-                <span>StadiumPulse Arena · Sec 214</span>
+                <span>{t("StadiumPulse Arena · Sec 214")}</span>
               </span>
             </div>
           </div>
@@ -97,16 +99,16 @@ export default function FanHomePage() {
           {/* Seat Grid Coordinates */}
           <div className="grid grid-cols-3 gap-2 bg-black bg-opacity-35 p-3 rounded-xl border border-slate-800/80 text-center">
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-500 block">Gate</span>
+              <span className="text-[9px] uppercase font-bold text-slate-500 block">{t("Gate")}</span>
               <span className="text-sm font-bold text-white">B</span>
             </div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-500 block">Section</span>
+              <span className="text-[9px] uppercase font-bold text-slate-500 block">{t("Section")}</span>
               <span className="text-sm font-bold text-white">214</span>
             </div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-500 block">Seat</span>
-              <span className="text-sm font-bold text-white">Row 6, #14</span>
+              <span className="text-[9px] uppercase font-bold text-slate-500 block">{t("Seat")}</span>
+              <span className="text-sm font-bold text-white">{t("Row 6, #14")}</span>
             </div>
           </div>
         </div>
@@ -114,30 +116,30 @@ export default function FanHomePage() {
         {/* Live Congestion Status Strip */}
         <div className="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
           <div>
-            <h3 className="text-sm font-extrabold text-white uppercase tracking-wider mb-3">Live Stadium Status</h3>
+            <h3 className="text-sm font-extrabold text-white uppercase tracking-wider mb-3">{t("Live Stadium Status")}</h3>
             
             <div className="space-y-3">
               <div className="flex justify-between items-center border-b border-slate-800/50 pb-2">
-                <span className="text-xs font-semibold text-slate-300">Gate B (Your Entrance)</span>
-                <StatusBadge status="crowded" text="Heavy Queue" />
+                <span className="text-xs font-semibold text-slate-300">{t("Gate B (Your Entrance)")}</span>
+                <StatusBadge status="crowded" text={t("Heavy Queue")} />
               </div>
               <div className="flex justify-between items-center border-b border-slate-800/50 pb-2">
-                <span className="text-xs font-semibold text-slate-300">Gate D (Alternative)</span>
-                <StatusBadge status="open" text="Very Low Queue" />
+                <span className="text-xs font-semibold text-slate-300">{t("Gate D (Alternative)")}</span>
+                <StatusBadge status="open" text={t("Very Low Queue")} />
               </div>
               <div className="flex justify-between items-center border-b border-slate-800/50 pb-2">
-                <span className="text-xs font-semibold text-slate-300">Restroom R2 (Accessible)</span>
-                <StatusBadge status="warning" text="5 min queue" />
+                <span className="text-xs font-semibold text-slate-300">{t("Restroom R2 (Accessible)")}</span>
+                <StatusBadge status="warning" text={t("5 min queue")} />
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs font-semibold text-slate-300">Metro Exit 3 Transit Hub</span>
-                <StatusBadge status="open" text="Flow Normal" />
+                <span className="text-xs font-semibold text-slate-300">{t("Metro Exit 3 Transit Hub")}</span>
+                <StatusBadge status="open" text={t("Flow Normal")} />
               </div>
             </div>
           </div>
 
           <div className="text-[10px] text-slate-500 font-semibold italic">
-            * Status checks are refreshed every 15s from verified staff reports.
+            {t("* Status checks are refreshed every 15s from verified staff reports.")}
           </div>
         </div>
 
@@ -145,39 +147,39 @@ export default function FanHomePage() {
 
       {/* Quick Actions Grid */}
       <div className="space-y-3">
-        <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Quick Actions</h3>
+        <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">{t("Quick Actions")}</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           
           <button 
             onClick={() => handleQuickAction('Section 214', routePreference)}
-            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02]"
+            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02] cursor-pointer"
           >
             <span className="text-xl">🎫</span>
-            <span className="text-xs font-bold text-white block">Find Seat 214</span>
+            <span className="text-xs font-bold text-white block">{t("Find Seat 214")}</span>
           </button>
 
           <button 
             onClick={() => handleQuickAction('Restroom R2', 'wheelchair')}
-            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02]"
+            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02] cursor-pointer"
           >
             <span className="text-xl">♿</span>
-            <span className="text-xs font-bold text-white block">Accessible Toilet</span>
+            <span className="text-xs font-bold text-white block">{t("Accessible Toilet")}</span>
           </button>
 
           <button 
             onClick={() => handleQuickAction('Medical Desk', routePreference)}
-            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02]"
+            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02] cursor-pointer"
           >
             <span className="text-xl">🚨</span>
-            <span className="text-xs font-bold text-white block">Medical Desk</span>
+            <span className="text-xs font-bold text-white block">{t("Medical Desk")}</span>
           </button>
 
           <button 
             onClick={() => handleQuickAction('Metro Exit 3', 'least_crowded')}
-            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02]"
+            className="p-4 bg-stadiumNavy border border-slate-800 hover:border-electricBlue rounded-xl text-center space-y-2 transition-all hover:scale-[1.02] cursor-pointer"
           >
             <span className="text-xl">🚇</span>
-            <span className="text-xs font-bold text-white block">Less Busy Exit</span>
+            <span className="text-xs font-bold text-white block">{t("Less Busy Exit")}</span>
           </button>
 
         </div>
@@ -187,11 +189,11 @@ export default function FanHomePage() {
       <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
         <div className="flex items-center space-x-2">
           <Compass className="text-electricBlue" />
-          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Recommended Route Suggestion</h3>
+          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">{t("Recommended Route Suggestion")}</h3>
         </div>
 
         <p className="text-xs text-slate-400 leading-relaxed font-medium">
-          Gate B is currently crowded. Based on the stadium graph, the system suggests entering via <strong className="text-white font-bold">Gate D</strong> and walking via <strong className="text-white font-bold">Concourse East</strong> to bypass the queues at the South gates.
+          {t("Gate B is currently crowded. Based on the stadium graph, the system suggests entering via")} <strong className="text-white font-bold">{t("Gate D")}</strong> {t("and walking via")} <strong className="text-white font-bold">{t("Concourse East")}</strong> {t("to bypass the queues at the South gates.")}
         </p>
 
         <div className="flex space-x-3">
@@ -199,14 +201,14 @@ export default function FanHomePage() {
             to="/smart-navigation"
             className="px-4 py-2 bg-electricBlue hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-all"
           >
-            Open Interactive Map
+            {t("Open Interactive Map")}
           </Link>
           <Link
             to="/transport-exit"
             className="px-4 py-2 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white text-xs font-semibold rounded-xl transition-all flex items-center space-x-1"
           >
             <Bus size={12} />
-            <span>Transit Exit Planner</span>
+            <span>{t("Transit Exit Planner")}</span>
           </Link>
         </div>
       </div>
@@ -214,14 +216,14 @@ export default function FanHomePage() {
       {/* Live Alerts Area */}
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">Live Broadcast Warnings</h3>
-          <Link to="/live-alerts" className="text-xs text-electricBlue hover:underline font-bold">View All Alerts</Link>
+          <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">{t("Live Broadcast Warnings")}</h3>
+          <Link to="/live-alerts" className="text-xs text-electricBlue hover:underline font-bold">{t("View All Alerts")}</Link>
         </div>
 
         {loadingAlerts ? (
           <div className="flex items-center space-x-2 text-xs text-slate-500 py-4 font-semibold">
             <Loader2 size={12} className="animate-spin" />
-            <span>Retrieving live safety feeds...</span>
+            <span>{t("Retrieving live safety feeds...")}</span>
           </div>
         ) : alerts.length > 0 ? (
           <div className="space-y-3">
@@ -231,7 +233,7 @@ export default function FanHomePage() {
           </div>
         ) : (
           <div className="p-4 border border-dashed border-slate-800 text-center text-xs text-slate-500 rounded-xl bg-stadiumNavy/10">
-            No active emergency alerts currently posted for this zone.
+            {t("No active emergency alerts currently posted for this zone.")}
           </div>
         )}
       </div>
@@ -243,15 +245,15 @@ export default function FanHomePage() {
             <Accessibility size={20} />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-white">Accessibility & Guidance Controls</h4>
-            <p className="text-xs text-slate-400 font-medium">Scale fonts, swap contrast themes, and configure wheelchair-accessible route paths.</p>
+            <h4 className="text-sm font-bold text-white">{t("Accessibility & Guidance Controls")}</h4>
+            <p className="text-xs text-slate-400 font-medium">{t("Scale fonts, swap contrast themes, and configure wheelchair-accessible route paths.")}</p>
           </div>
         </div>
         <Link 
           to="/accessibility"
           className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg text-center"
         >
-          Open Center
+          {t("Open Center")}
         </Link>
       </div>
 

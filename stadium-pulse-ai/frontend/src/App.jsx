@@ -1,7 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
+import { ArrowLeft } from 'lucide-react';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -50,9 +51,11 @@ function ProtectedRoute({ children, allowedRoles = [] }) {
 function AppShell() {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isPublicRoute = ['/', '/login'].includes(location.pathname);
   const isStaff = user && ['volunteer', 'staff', 'organizer'].includes(user.role);
+  const showBackButton = !['/fan-home', '/staff-dashboard', '/organizer-command', '/login', '/'].includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-primaryDark flex flex-col">
@@ -65,6 +68,17 @@ function AppShell() {
 
         {/* Main scrollable content area */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 md:pb-6 min-h-0">
+          {showBackButton && (
+            <div className="mb-4">
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center space-x-1.5 px-3.5 py-2 bg-stadiumNavy hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all shadow-md w-fit cursor-pointer"
+              >
+                <ArrowLeft size={14} />
+                <span>Back</span>
+              </button>
+            </div>
+          )}
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<LandingPage />} />

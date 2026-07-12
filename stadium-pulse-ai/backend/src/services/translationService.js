@@ -28,7 +28,7 @@ Text to translate:
 
   try {
     console.log(`[Translate API] Calling Gemini for translation to: ${targetLang}`);
-    const translation = await callGemini(prompt, systemInstruction);
+    const translation = await callGemini(prompt, '', systemInstruction);
     const cleaned = translation.replace(/^["']|["']$/g, '').trim(); // Strip quotes
     cacheService.setTranslation(text, targetLang, cleaned);
     return cleaned;
@@ -37,7 +37,7 @@ Text to translate:
 
     try {
       console.log(`[Translate API] Calling Groq for translation to: ${targetLang}`);
-      const translation = await callGroq(prompt, systemInstruction);
+      const translation = await callGroq(prompt, '', systemInstruction);
       const cleaned = translation.replace(/^["']|["']$/g, '').trim();
       cacheService.setTranslation(text, targetLang, cleaned);
       return cleaned;

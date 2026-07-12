@@ -21,17 +21,18 @@ Reason: [Explain why this recommendation is safe/efficient based on the data]
 Action: [The recommended immediate next step for the user, e.g. "Go to Gate D", "Show map"]`;
 
 /**
- * Call Gemini 1.5 Flash API
+ * Call Gemini API (defaults to 3.5 Flash)
  */
-export async function callGemini(prompt, contextText = '') {
+export async function callGemini(prompt, contextText = '', customSystemPrompt = null) {
   // Gemini API key is read from .env
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
     throw new Error('Gemini API key is not configured.');
   }
 
-  const systemInstruction = SYSTEM_PROMPT + (contextText ? `\n\nVERIFIED CONTEXT:\n${contextText}` : '');
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const basePrompt = customSystemPrompt || SYSTEM_PROMPT;
+  const systemInstruction = basePrompt + (contextText ? `\n\nVERIFIED CONTEXT:\n${contextText}` : '');
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
 
   const payload = {
     contents: [
@@ -59,18 +60,19 @@ export async function callGemini(prompt, contextText = '') {
 /**
  * Call Groq API (fallback)
  */
-export async function callGroq(prompt, contextText = '') {
+export async function callGroq(prompt, contextText = '', customSystemPrompt = null) {
   // Groq API key is read from .env
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey || apiKey === 'your_groq_api_key_here') {
     throw new Error('Groq API key is not configured.');
   }
 
-  const systemInstruction = SYSTEM_PROMPT + (contextText ? `\n\nVERIFIED CONTEXT:\n${contextText}` : '');
+  const basePrompt = customSystemPrompt || SYSTEM_PROMPT;
+  const systemInstruction = basePrompt + (contextText ? `\n\nVERIFIED CONTEXT:\n${contextText}` : '');
   const url = 'https://api.groq.com/openai/v1/chat/completions';
 
   const payload = {
-    model: 'llama3-8b-8192', // fast fallback model
+    model: 'llama-3.1-8b-instant', // fast active fallback model
     messages: [
       { role: 'system', content: systemInstruction },
       { role: 'user', content: prompt }
