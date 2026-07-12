@@ -1,4 +1,4 @@
-import { admin } from '../config/firebaseAdmin.js';
+import { admin, db } from '../config/firebaseAdmin.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -35,14 +35,22 @@ export async function verifyAuthToken(req, res, next) {
   const token = authHeader.split('Bearer ')[1];
 
   try {
-    // To enable Firebase token verification, ensure Admin SDK was successfully initialized in firebaseAdmin.js
     const decodedToken = await admin.auth().verifyIdToken(token);
     req.user = decodedToken;
     
-    // Attach custom user roles if they are set on the token claims
-    // e.g., decodedToken.role could be 'fan', 'volunteer', 'staff', 'organizer'
+    // Attach custom user roles from token claims or database
     if (!req.user.role) {
-      req.user.role = 'fan'; // Default role
+      if (db) {
+        try {
+          const userDoc = await db.collection('users').doc(decodedToken.uid).get();
+          req.user.role = userDoc.exists ? (userDoc.data().role || 'fan') : 'fan';
+        } catch (dbErr) {
+          console.warn('AuthMiddleware: Firestore role lookup failed, defaulting to fan. Error:', dbErr.message);
+          req.user.role = 'fan';
+        }
+      } else {
+        req.user.role = 'fan'; // Default role
+      }
     }
 
     next();

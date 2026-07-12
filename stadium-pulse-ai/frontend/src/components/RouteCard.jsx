@@ -63,7 +63,7 @@ export default function RouteCard({ route }) {
       {route.hasStairs && (
         <div className="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-lg flex items-center space-x-2 text-xs text-alertAmber">
           <AlertTriangle size={16} className="shrink-0" />
-          <span>This path contains stairs. Switch to **Wheelchair Mode** if you require elevator or ramp access.</span>
+          <span>This path contains stairs. Switch to <strong className="text-alertAmber font-bold">Wheelchair Mode</strong> if you require elevator or ramp access.</span>
         </div>
       )}
 

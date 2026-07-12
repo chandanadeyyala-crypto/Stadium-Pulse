@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 export default function LoginPage() {
-  const { loginWithGoogleMock, signInAsDemoRole } = useAuth();
+  const { loginWithGoogle, loginWithEmail, signInAsDemoRole } = useAuth();
   const { 
     highContrast, setHighContrast, 
     textScale, setTextScale,
@@ -22,11 +22,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleEmailLogin = (e) => {
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
-    // Default mock login as fan
-    signInAsDemoRole('fan');
-    navigate('/fan-home');
+    try {
+      await loginWithEmail(email, password);
+      navigate('/fan-home');
+    } catch (err) {
+      alert(`Login failed: ${err.message}`);
+    }
   };
 
   const handleDemoSignIn = (role) => {
@@ -132,9 +135,13 @@ export default function LoginPage() {
 
         {/* Google sign-in */}
         <button
-          onClick={() => {
-            loginWithGoogleMock();
-            navigate('/fan-home');
+          onClick={async () => {
+            try {
+              await loginWithGoogle();
+              navigate('/fan-home');
+            } catch (err) {
+              alert(`Google Sign-In failed: ${err.message}`);
+            }
           }}
           className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center space-x-2 transition-all"
         >

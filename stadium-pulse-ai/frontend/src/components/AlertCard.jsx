@@ -7,7 +7,14 @@ import {
   VolumeX, 
   Languages, 
   MapPin, 
-  Loader2 
+  Loader2,
+  Users,
+  DoorOpen,
+  Bus,
+  Activity,
+  Accessibility,
+  AlertTriangle,
+  Info
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -74,11 +81,28 @@ export default function AlertCard({ alert, onTranslate }) {
     }
   };
 
+  const getAlertIcon = (type) => {
+    const t = (type || '').toLowerCase();
+    if (t.includes('crowd') || t.includes('congestion')) return <Users size={12} className="text-amber-400" />;
+    if (t.includes('gate') || t.includes('entry') || t.includes('exit')) return <DoorOpen size={12} className="text-blue-400" />;
+    if (t.includes('transport') || t.includes('bus') || t.includes('metro') || t.includes('train')) return <Bus size={12} className="text-teal-400" />;
+    if (t.includes('medical') || t.includes('health') || t.includes('injury')) return <Activity size={12} className="text-red-400" />;
+    if (t.includes('access') || t.includes('disabled')) return <Accessibility size={12} className="text-indigo-400" />;
+    if (t.includes('emergency') || t.includes('hazard')) return <AlertTriangle size={12} className="text-rose-500 animate-pulse" />;
+    return <Info size={12} className="text-slate-400" />;
+  };
+
   const timeAgo = (dateStr) => {
     const minutes = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
     if (minutes <= 0) return 'Just now';
-    if (minutes === 1) return '1 minute ago';
-    return `${minutes} minutes ago`;
+    if (minutes === 1) return '1 min ago';
+    if (minutes < 60) return `${minutes} min ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours === 1) return '1 hr ago';
+    if (hours < 24) return `${hours} hrs ago`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return '1 day ago';
+    return `${days} days ago`;
   };
 
   return (
@@ -96,10 +120,21 @@ export default function AlertCard({ alert, onTranslate }) {
           <span className="text-[10px] text-slate-500 font-medium">
             {timeAgo(alert.timestamp)}
           </span>
+          {(alert.severity === 'critical' || alert.severity === 'warning') && (
+            <span className="flex h-2 w-2 relative">
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'
+              }`}></span>
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'
+              }`}></span>
+            </span>
+          )}
         </div>
         {alert.type && (
-          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
-            {alert.type}
+          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-300 bg-slate-800/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 border border-slate-700/50">
+            {getAlertIcon(alert.type)}
+            <span>{alert.type}</span>
           </span>
         )}
       </div>

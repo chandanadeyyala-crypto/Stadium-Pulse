@@ -21,7 +21,7 @@ router.post('/ask', verifyAuthToken, async (req, res) => {
     const normalized = normalizeQuestion(question);
 
     // 1. Check in-memory cache
-    const cachedResponse = cacheService.getQuery(normalized, role, language);
+    const cachedResponse = await cacheService.getQuery(normalized, role, language);
     if (cachedResponse) {
       return res.json({
         success: true,
@@ -31,7 +31,7 @@ router.post('/ask', verifyAuthToken, async (req, res) => {
     }
 
     // 2. Fetch context from verified stadium records
-    const contextText = venueDataService.findRelevantContext(normalized);
+    const contextText = await venueDataService.findRelevantContext(normalized);
 
     // 3. Fallback check: If no verified context matches, bypass LLM to prevent hallucination
     if (!contextText || contextText.trim() === '') {
@@ -56,7 +56,7 @@ Action: Please check the spelling of your gate/section or consult an information
     }
 
     // 6. Save answer in cache
-    cacheService.setQuery(normalized, role, language, aiResponse);
+    await cacheService.setQuery(normalized, role, language, aiResponse);
 
     res.json({
       success: true,

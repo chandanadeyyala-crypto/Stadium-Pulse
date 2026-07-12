@@ -6,9 +6,9 @@ import { venueDataService } from '../services/venueDataService.js';
 const router = express.Router();
 
 // GET /api/alerts - Retrieve all approved active alerts
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const alerts = venueDataService.getAlerts();
+    const alerts = await venueDataService.getAlerts();
     const approvedAlerts = alerts.filter(a => a.approved === true);
     res.json(approvedAlerts);
   } catch (error) {
@@ -17,9 +17,9 @@ router.get('/', (req, res) => {
 });
 
 // GET /api/alerts/pending - Retrieve pending alerts awaiting verification (Staff/Organizer only)
-router.get('/pending', verifyAuthToken, requireRole(['staff', 'organizer']), (req, res) => {
+router.get('/pending', verifyAuthToken, requireRole(['staff', 'organizer']), async (req, res) => {
   try {
-    const alerts = venueDataService.getAlerts();
+    const alerts = await venueDataService.getAlerts();
     const pendingAlerts = alerts.filter(a => a.approved === false);
     res.json(pendingAlerts);
   } catch (error) {
@@ -28,7 +28,7 @@ router.get('/pending', verifyAuthToken, requireRole(['staff', 'organizer']), (re
 });
 
 // POST /api/alerts/approve - Approve and publish a pending alert draft
-router.post('/approve', verifyAuthToken, requireRole(['staff', 'organizer']), (req, res) => {
+router.post('/approve', verifyAuthToken, requireRole(['staff', 'organizer']), async (req, res) => {
   const { alertId } = req.body;
 
   if (!alertId) {
@@ -39,7 +39,7 @@ router.post('/approve', verifyAuthToken, requireRole(['staff', 'organizer']), (r
   }
 
   try {
-    const approvedAlert = venueDataService.approveAlert(alertId);
+    const approvedAlert = await venueDataService.approveAlert(alertId);
 
     if (!approvedAlert) {
       return res.status(404).json({
@@ -49,7 +49,7 @@ router.post('/approve', verifyAuthToken, requireRole(['staff', 'organizer']), (r
     }
 
     // Mark the parent incident as verified if applicable
-    const incidents = venueDataService.getIncidents();
+    const incidents = await venueDataService.getIncidents();
     const incidentId = approvedAlert.incidentId;
     if (incidentId) {
       const incident = incidents.find(i => i.id === incidentId);

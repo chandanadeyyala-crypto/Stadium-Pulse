@@ -14,7 +14,14 @@ import {
 } from 'lucide-react';
 
 export default function AIAssistantPage() {
-  const { language, setLanguage } = useAccessibility();
+  const { language, setLanguage, speakText, stopSpeaking } = useAccessibility();
+
+  // Clean up speech on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+    };
+  }, []);
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -86,6 +93,7 @@ Action: Ask me a question about gate locations, accessible restrooms, or exiting
     if (isListening) {
       recognitionRef.current.stop();
     } else {
+      stopSpeaking();
       recognitionRef.current.start();
     }
   };
@@ -93,6 +101,8 @@ Action: Ask me a question about gate locations, accessible restrooms, or exiting
   const handleSend = async (textToSend) => {
     const queryText = textToSend || input;
     if (!queryText.trim()) return;
+
+    stopSpeaking(); // Stop any ongoing speech when user submits a new query
 
     // Append user message
     const userMsgId = `user_${Date.now()}`;
@@ -120,11 +130,13 @@ Action: Ask me a question about gate locations, accessible restrooms, or exiting
       });
 
       if (response.data.success) {
+        const botResponseText = response.data.response;
         setMessages(prev => [...prev, {
           id: `bot_${Date.now()}`,
           sender: 'bot',
-          text: response.data.response
+          text: botResponseText
         }]);
+        speakText(botResponseText);
       }
     } catch (error) {
       console.error('Q&A error:', error.message);

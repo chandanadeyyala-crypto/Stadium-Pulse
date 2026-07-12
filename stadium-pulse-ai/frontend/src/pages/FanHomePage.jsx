@@ -191,7 +191,7 @@ export default function FanHomePage() {
         </div>
 
         <p className="text-xs text-slate-400 leading-relaxed font-medium">
-          Gate B is currently crowded. Based on the stadium graph, the system suggests entering via **Gate D** and walking via **Concourse East** to bypass the queues at the South gates.
+          Gate B is currently crowded. Based on the stadium graph, the system suggests entering via <strong className="text-white font-bold">Gate D</strong> and walking via <strong className="text-white font-bold">Concourse East</strong> to bypass the queues at the South gates.
         </p>
 
         <div className="flex space-x-3">

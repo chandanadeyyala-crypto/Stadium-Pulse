@@ -25,7 +25,7 @@ const NOTIFICATION_PREFS = [
 ];
 
 export default function SettingsPage() {
-  const { user, logout } = useAuth();
+  const { user, logout, signInAsDemoRole } = useAuth();
   const { language, setLanguage, highContrast, setHighContrast, textScale, setTextScale, speechEnabled, setSpeechEnabled, routePreference, setRoutePreference } = useAccessibility();
   const navigate = useNavigate();
 
@@ -96,10 +96,12 @@ export default function SettingsPage() {
           {['fan', 'volunteer', 'staff', 'organizer'].map(role => (
             <button
               key={role}
-              onClick={() => {
-                const { signInAsDemoRole } = useAuth();
-              }}
-              className="px-3 py-1.5 bg-stadiumNavy border border-slate-800 rounded-lg text-xs font-semibold text-slate-400 hover:text-white capitalize"
+              onClick={() => signInAsDemoRole(role)}
+              className={`px-3 py-1.5 border rounded-lg text-xs font-semibold capitalize transition-all ${
+                user?.role === role
+                  ? 'bg-electricBlue/20 border-electricBlue text-white font-bold'
+                  : 'bg-stadiumNavy border-slate-800 text-slate-400 hover:text-white'
+              }`}
             >
               Switch to {role}
             </button>

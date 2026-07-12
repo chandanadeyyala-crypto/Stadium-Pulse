@@ -13,16 +13,30 @@ if (!isDemo) {
       ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
       : undefined;
 
-    if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && privateKey) {
-      firebaseApp = admin.initializeApp({
-        credential: admin.credential.cert({
+    if (process.env.FIREBASE_PROJECT_ID) {
+      const config = {
+        projectId: process.env.FIREBASE_PROJECT_ID
+      };
+
+      // Only load cert credential if details exist and look like a real private key cert
+      if (process.env.FIREBASE_CLIENT_EMAIL && privateKey && privateKey.includes('PRIVATE KEY')) {
+        config.credential = admin.credential.cert({
           projectId: process.env.FIREBASE_PROJECT_ID,
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
           privateKey: privateKey,
-        }),
-      });
-      db = admin.firestore();
-      console.log('Firebase Admin SDK initialized successfully.');
+        });
+      }
+
+      firebaseApp = admin.initializeApp(config);
+      
+      try {
+        db = admin.firestore();
+        console.log('Firestore initialized successfully in backend.');
+      } catch (dbErr) {
+        console.warn('Firestore failed to initialize in backend. Operating without database backing. Error:', dbErr.message);
+      }
+      
+      console.log('Firebase Admin SDK initialized successfully with Project ID:', process.env.FIREBASE_PROJECT_ID);
     } else {
       console.warn('Firebase Admin credentials missing. Operating in local mode (Firebase Admin disabled).');
     }

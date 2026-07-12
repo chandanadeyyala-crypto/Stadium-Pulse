@@ -6,7 +6,7 @@ import { verifyAuthToken } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // POST /api/routes/recommend - Fetch recommended navigation routes
-router.post('/recommend', verifyAuthToken, (req, res) => {
+router.post('/recommend', verifyAuthToken, async (req, res) => {
   const { currentLocation, destination, routePreference = 'fastest' } = req.body;
 
   if (!currentLocation || !destination) {
@@ -18,7 +18,7 @@ router.post('/recommend', verifyAuthToken, (req, res) => {
 
   try {
     // 1. Retrieve current active operational alerts
-    const alerts = venueDataService.getAlerts();
+    const alerts = await venueDataService.getAlerts();
 
     // 2. Perform graph computation
     const routingResult = calculateRoute(currentLocation, destination, routePreference, alerts);

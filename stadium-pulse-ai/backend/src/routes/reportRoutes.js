@@ -94,7 +94,7 @@ Ensure it is valid JSON. Do not wrap it in markdown block tags (\`\`\`).`;
   newIncident.draftFanAlert = draftFanAlert;
 
   // 4. Register the incident in the system (pending approval)
-  venueDataService.addIncident(newIncident);
+  await venueDataService.addIncident(newIncident);
 
   // 5. Also construct a pending alert draft that will show up on the Alert Approval Page
   const pendingAlert = {
@@ -108,7 +108,7 @@ Ensure it is valid JSON. Do not wrap it in markdown block tags (\`\`\`).`;
     approved: false // Needs explicit approval in Alert Approval Page
   };
 
-  venueDataService.addAlert(pendingAlert);
+  await venueDataService.addAlert(pendingAlert);
 
   res.json({
     success: true,

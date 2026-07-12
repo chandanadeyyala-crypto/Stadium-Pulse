@@ -1,4 +1,5 @@
 import { STADIUM_NODES, STADIUM_EDGES } from './routeEngine.js';
+import { db } from '../config/firebaseAdmin.js';
 
 // Local store representing active operational statuses and lists
 let activeAlerts = [
@@ -58,38 +59,113 @@ export const venueDataService = {
     return STADIUM_EDGES;
   },
 
-  getAlerts() {
+  async getAlerts() {
+    if (db) {
+      try {
+        const snapshot = await db.collection('alerts').orderBy('timestamp', 'desc').get();
+        const alerts = [];
+        snapshot.forEach(doc => {
+          alerts.push({ id: doc.id, ...doc.data() });
+        });
+        if (alerts.length > 0) {
+          return alerts;
+        }
+      } catch (err) {
+        console.warn('[VenueDataService] Firestore getAlerts failed, using memory. Error:', err.message);
+      }
+    }
     return activeAlerts;
   },
 
-  addAlert(alert) {
+  async addAlert(alert) {
+    if (db) {
+      try {
+        const docRef = db.collection('alerts').doc(alert.id || `alert_${Date.now()}`);
+        await docRef.set(alert);
+        console.log('[VenueDataService] Alert added to Firestore:', alert.id);
+        return alert;
+      } catch (err) {
+        console.warn('[VenueDataService] Firestore addAlert failed, using memory. Error:', err.message);
+      }
+    }
     activeAlerts.unshift(alert);
     return alert;
   },
 
-  approveAlert(alertId) {
+  async approveAlert(alertId) {
+    if (db) {
+      try {
+        const docRef = db.collection('alerts').doc(alertId);
+        const doc = await docRef.get();
+        if (doc.exists) {
+          await docRef.update({ approved: true });
+          const updated = { id: doc.id, ...doc.data(), approved: true };
+          
+          // Also verify parent incident if applicable
+          if (updated.incidentId) {
+            try {
+              await db.collection('incidents').doc(updated.incidentId).update({ status: 'approved' });
+            } catch (incErr) {
+              console.warn('[VenueDataService] Failed to update parent incident in Firestore:', incErr.message);
+            }
+          }
+          return updated;
+        }
+      } catch (err) {
+        console.warn('[VenueDataService] Firestore approveAlert failed, using memory. Error:', err.message);
+      }
+    }
+
     const alertIndex = activeAlerts.findIndex(a => a.id === alertId);
     if (alertIndex !== -1) {
       activeAlerts[alertIndex].approved = true;
-      return activeAlerts[alertIndex];
+      const approvedAlert = activeAlerts[alertIndex];
+      const incidentId = approvedAlert.incidentId;
+      if (incidentId) {
+        const incident = reportedIncidents.find(i => i.id === incidentId);
+        if (incident) {
+          incident.status = 'approved';
+        }
+      }
+      return approvedAlert;
     }
     return null;
   },
 
-  getIncidents() {
+  async getIncidents() {
+    if (db) {
+      try {
+        const snapshot = await db.collection('incidents').orderBy('timestamp', 'desc').get();
+        const incidents = [];
+        snapshot.forEach(doc => {
+          incidents.push({ id: doc.id, ...doc.data() });
+        });
+        if (incidents.length > 0) {
+          return incidents;
+        }
+      } catch (err) {
+        console.warn('[VenueDataService] Firestore getIncidents failed, using memory. Error:', err.message);
+      }
+    }
     return reportedIncidents;
   },
 
-  addIncident(incident) {
+  async addIncident(incident) {
+    if (db) {
+      try {
+        const docRef = db.collection('incidents').doc(incident.id || `inc_${Date.now()}`);
+        await docRef.set(incident);
+        console.log('[VenueDataService] Incident added to Firestore:', incident.id);
+        return incident;
+      } catch (err) {
+        console.warn('[VenueDataService] Firestore addIncident failed, using memory. Error:', err.message);
+      }
+    }
     reportedIncidents.unshift(incident);
     return incident;
   },
 
-  /**
-   * Performs keyword extraction and matches questions to verified node info.
-   * This handles RAG grounding.
-   */
-  findRelevantContext(normalizedQuestion) {
+  async findRelevantContext(normalizedQuestion) {
     const contextSegments = [];
     const question = normalizedQuestion.toLowerCase();
 
@@ -114,7 +190,8 @@ export const venueDataService = {
     });
 
     // 2. Attach active alerts affecting those nodes
-    activeAlerts.forEach(alert => {
+    const alerts = await this.getAlerts();
+    alerts.forEach(alert => {
       if (alert.approved) {
         // If alert matches search keywords
         const alertText = alert.message.toLowerCase() + " " + (alert.target || "").toLowerCase();
