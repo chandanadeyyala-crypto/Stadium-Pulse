@@ -7,8 +7,6 @@
 ## Core Principle: Grounded Trust (Anti-Hallucination)
 To ensure safety and reliability in crowded stadiums, **AI must never invent facts**. StadiumPulse AI enforces this strict workflow across all AI interfaces:
 
-$$\text{Verified Venue Data} + \text{Live Staff Reports} \rightarrow \text{AI Contextual Explanation / Translation} \rightarrow \text{User}$$
-
 If verified information is missing for a specific section, gate, or incident, the AI will strictly respond with:
 > **"I don’t have verified information for that right now."**
 
