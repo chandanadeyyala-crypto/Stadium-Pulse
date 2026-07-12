@@ -18,7 +18,6 @@ out/
 *.env
 
 # Firebase service accounts and credentials
-*.json
 !firebase.json
 !firestore.indexes.json
 !firestore.rules

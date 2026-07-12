@@ -8,7 +8,8 @@
 To ensure safety and reliability in crowded stadiums, **AI must never invent facts**. StadiumPulse AI enforces this strict workflow across all AI interfaces:
 
 If verified information is missing for a specific section, gate, or incident, the AI will strictly respond with:
-> **"I don’t have verified information for that right now."**
+> **"I don’t have verified information for that
+ right now."**
 
 ---
 
