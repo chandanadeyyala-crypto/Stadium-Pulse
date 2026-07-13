@@ -7,6 +7,7 @@ import RouteCard from '../components/RouteCard';
 import StatusBadge from '../components/StatusBadge';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
+import 'leaflet/dist/leaflet.css';
 import {
   Navigation,
   MapPin,
@@ -32,6 +33,14 @@ const NODE_COORDINATES = {
   "Section 214": [40.8136, -74.0746],
   "Metro Exit 3": [40.8120, -74.0725]
 };
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+  iconUrl: '/leaflet/marker-icon.png',
+  shadowUrl: '/leaflet/marker-shadow.png',
+});
 
 // Custom SVG Leaflet Icons to avoid Vite path errors and provide beautiful dark-themed indicators
 const createCustomIcon = (color, char) => {
@@ -205,8 +214,8 @@ export default function SmartNavigationPage() {
                     key={pref.id}
                     onClick={() => setPreference(pref.id)}
                     className={`text-left px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${preference === pref.id
-                        ? 'bg-electricBlue/20 border-electricBlue text-white shadow-lg'
-                        : 'bg-stadiumNavy/40 border-slate-800 text-slate-400 hover:text-slate-200'
+                      ? 'bg-electricBlue/20 border-electricBlue text-white shadow-lg'
+                      : 'bg-stadiumNavy/40 border-slate-800 text-slate-400 hover:text-slate-200'
                       }`}
                   >
                     {pref.name}
