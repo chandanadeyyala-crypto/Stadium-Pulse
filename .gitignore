@@ -23,6 +23,11 @@ out/
 !firestore.rules
 !database.rules.json
 !storage.rules
+stadium-flow-a1657-firebase-adminsdk-fbsvc-ba62323b5e.json
+# Firebase service accounts and credentials
+*-firebase-adminsdk-*.json
+serviceAccountKey.json
+firebase-admin-key.json
 
 # OS files
 .DS_Store

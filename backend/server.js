@@ -14,50 +14,82 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS with customizable origin configuration
-const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:5173';
-app.use(cors({
-  origin: allowedOrigin,
-  credentials: true
-}));
+// Remove any trailing slash from the configured frontend origin.
+const allowedOrigin = (
+  process.env.ALLOWED_ORIGIN || 'http://localhost:5173'
+).replace(/\/$/, '');
 
-// Parsers
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-// Log requests
+// Request logging
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`
+  );
   next();
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    demoMode: process.env.DEMO_MODE === 'true'
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'StadiumPulse AI backend is running',
+    environment: process.env.NODE_ENV || 'development',
+    demoMode: process.env.DEMO_MODE === 'true',
   });
 });
 
-// Register routes
+// Health endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    demoMode: process.env.DEMO_MODE === 'true',
+  });
+});
+
+// API routes
 app.use('/api/venue', venueRouter);
 app.use('/api/ai', aiRouter);
 app.use('/api/reports', reportRouter);
 app.use('/api/alerts', alertRouter);
 app.use('/api/routes', routeRouter);
 
-// Express global error handler
-app.use((err, req, res, next) => {
-  console.error('[Global Server Error]:', err.stack);
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: err.message || 'An unexpected error occurred on the StadiumPulse AI server.'
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Route not found',
+    path: req.originalUrl,
   });
 });
 
-// Start listening
-app.listen(PORT, () => {
+// Global error handler must be last
+app.use((err, req, res, next) => {
+  console.error('[Global Server Error]:', err.stack);
+
+  res.status(err.status || 500).json({
+    success: false,
+    error: 'Internal Server Error',
+    message:
+      err.message ||
+      'An unexpected error occurred on the StadiumPulse AI server.',
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`StadiumPulse AI backend server running on port ${PORT}`);
-  console.log(`Demo mode: ${process.env.DEMO_MODE === 'true' ? 'ENABLED' : 'DISABLED'}`);
+  console.log(
+    `Demo mode: ${process.env.DEMO_MODE === 'true' ? 'ENABLED' : 'DISABLED'
+    }`
+  );
   console.log(`CORS allowed origin: ${allowedOrigin}`);
 });

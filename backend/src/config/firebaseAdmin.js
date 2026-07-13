@@ -13,7 +13,13 @@ if (!isDemo) {
       ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
       : undefined;
 
-    if (process.env.FIREBASE_PROJECT_ID) {
+    const hasFirebaseCredentials =
+      process.env.FIREBASE_PROJECT_ID &&
+      process.env.FIREBASE_CLIENT_EMAIL &&
+      privateKey &&
+      privateKey.includes('PRIVATE KEY');
+
+    if (hasFirebaseCredentials) {
       const config = {
         projectId: process.env.FIREBASE_PROJECT_ID
       };
@@ -28,14 +34,14 @@ if (!isDemo) {
       }
 
       firebaseApp = admin.initializeApp(config);
-      
+
       try {
         db = admin.firestore();
         console.log('Firestore initialized successfully in backend.');
       } catch (dbErr) {
         console.warn('Firestore failed to initialize in backend. Operating without database backing. Error:', dbErr.message);
       }
-      
+
       console.log('Firebase Admin SDK initialized successfully with Project ID:', process.env.FIREBASE_PROJECT_ID);
     } else {
       console.warn('Firebase Admin credentials missing. Operating in local mode (Firebase Admin disabled).');
