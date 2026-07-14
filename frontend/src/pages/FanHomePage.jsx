@@ -58,7 +58,7 @@ export default function FanHomePage() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-stadiumNavy/40 border border-slate-800 rounded-2xl">
         <div>
           <h2 className="text-base md:text-xl font-bold text-white">
-            {t("Welcome,")} {user?.displayName?.split(' ')[0] || t(' 🎉')} ⚽
+            {t("Welcome to the")} {user?.displayName?.split(' ')[0] || t(' 🎉')}
           </h2>
           <p className="text-xs text-slate-400 mt-0.5 hidden sm:block">
             {t("Live matchday guidance — verified from stadium operations.")}
