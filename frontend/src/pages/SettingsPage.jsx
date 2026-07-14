@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import AccessibilityToggle from '../components/AccessibilityToggle';
-import { 
-  Settings, 
-  User, 
-  Languages, 
-  Shield, 
-  BellRing, 
-  Lock, 
+import {
+  Settings,
+  User,
+  Languages,
+  Shield,
+  BellRing,
+  Lock,
   LogOut,
   ChevronRight,
   CheckCircle
@@ -60,7 +60,7 @@ export default function SettingsPage() {
             {(user?.displayName || 'F')[0].toUpperCase()}
           </div>
           <div>
-            <h4 className="text-base font-extrabold text-white">{user?.displayName || 'Demo Fan'}</h4>
+            <h4 className="text-base font-extrabold text-white">{user?.displayName || 'Continue as Fan'}</h4>
             <p className="text-xs text-slate-400 font-medium">{user?.email}</p>
             <span className="text-[10px] uppercase font-bold text-electricBlue">{user?.role || 'fan'} mode</span>
           </div>
@@ -97,11 +97,10 @@ export default function SettingsPage() {
             <button
               key={role}
               onClick={() => signInAsDemoRole(role)}
-              className={`px-3 py-1.5 border rounded-lg text-xs font-semibold capitalize transition-all ${
-                user?.role === role
+              className={`px-3 py-1.5 border rounded-lg text-xs font-semibold capitalize transition-all ${user?.role === role
                   ? 'bg-electricBlue/20 border-electricBlue text-white font-bold'
                   : 'bg-stadiumNavy border-slate-800 text-slate-400 hover:text-white'
-              }`}
+                }`}
             >
               Switch to {role}
             </button>

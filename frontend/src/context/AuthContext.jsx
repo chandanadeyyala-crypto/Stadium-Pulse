@@ -134,7 +134,7 @@ export function AuthProvider({ children }) {
       const demoUser = {
         uid: 'google_demo_user',
         email: 'google-user@gmail.com',
-        displayName: 'Google Fan User',
+        displayName: 'User',
         role: 'fan',
         token: 'mock_google_token'
       };

@@ -5,15 +5,17 @@ import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
 import StatusBadge from '../components/StatusBadge';
 import AlertCard from '../components/AlertCard';
-import { 
-  Calendar, 
-  MapPin, 
-  Compass, 
-  AlertTriangle, 
-  Accessibility, 
-  Bus, 
+import {
+  Calendar,
+  MapPin,
+  Compass,
+  AlertTriangle,
+  Accessibility,
+  Bus,
   Loader2,
-  Navigation
+  Navigation,
+  UtensilsCrossed,
+  CupSoda
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -44,19 +46,19 @@ export default function FanHomePage() {
   }, []);
 
   const handleQuickAction = (dest, pref) => {
-    navigate('/smart-navigation', { 
-      state: { startNode: 'Gate B', destinationNode: dest, prefOverride: pref } 
+    navigate('/smart-navigation', {
+      state: { startNode: 'Gate B', destinationNode: dest, prefOverride: pref }
     });
   };
 
   return (
     <div className="space-y-4 md:space-y-6 max-w-4xl mx-auto">
-      
+
       {/* Welcome Bar */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-stadiumNavy/40 border border-slate-800 rounded-2xl">
         <div>
           <h2 className="text-base md:text-xl font-bold text-white">
-            {t("Welcome,")} {user?.displayName?.split(' ')[0] || t('Fan')} ⚽
+            {t("Welcome,")} {user?.displayName?.split(' ')[0] || t(' 🎉')} ⚽
           </h2>
           <p className="text-xs text-slate-400 mt-0.5 hidden sm:block">
             {t("Live matchday guidance — verified from stadium operations.")}
@@ -64,18 +66,18 @@ export default function FanHomePage() {
         </div>
         <div className="flex items-center space-x-2">
           <span className="text-xs font-semibold text-slate-400">{t("Status:")}</span>
-          <StatusBadge status="open" text={t("Gates Active")} />
+          <StatusBadge status="open" text={t("Match started")} />
         </div>
       </div>
 
       {/* Main Grid: Ticket + Status */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6">
-        
+
         {/* Match Ticket Card */}
         <div className="operations-card accent-navigation p-4 md:p-5 space-y-3">
           <div className="flex justify-between items-center pb-2 border-b border-white/5">
-            <span className="text-[10px] font-bold text-navAccent uppercase tracking-wider">{t("Match Ticket")}</span>
-            <span className="text-[9px] bg-slate-800/80 text-slate-400 px-2 py-0.5 rounded font-mono font-bold">MATCH 48</span>
+            <span className="text-[10px] font-bold text-navAccent uppercase tracking-wider">{t("Matchday Pass")}</span>
+
           </div>
 
           <div className="space-y-1.5">
@@ -87,7 +89,7 @@ export default function FanHomePage() {
               </span>
               <span className="flex items-center space-x-1.5">
                 <MapPin size={11} className="text-slate-400 flex-shrink-0" />
-                <span>{t("StadiumPulse Arena · Sec 214")}</span>
+                <span>{t("Tournament Venue · Section 214")}</span>
               </span>
             </div>
           </div>
@@ -111,21 +113,38 @@ export default function FanHomePage() {
 
         {/* Live Stadium Status */}
         <div className="operations-card accent-safety p-4 md:p-5 space-y-3">
-          <h3 className="text-xs font-extrabold text-white uppercase tracking-wider border-b border-white/5 pb-2">{t("Live Stadium Status")}</h3>
+          <h3 className="text-xs font-extrabold text-white uppercase tracking-wider border-b border-white/5 pb-2">{t("Venue Status")}</h3>
           <div className="space-y-2">
             {[
-              { label: t("Gate B (Your Entrance)"), status: "crowded", text: t("Heavy Queue") },
-              { label: t("Gate D (Alternative)"), status: "open", text: t("Very Low Queue") },
-              { label: t("Restroom R2 (Accessible)"), status: "warning", text: t("5 min queue") },
-              { label: t("Metro Exit 3"), status: "open", text: t("Flow Normal") },
+              {
+                label: t("Gate B (Your Entrance)"),
+                status: "crowded",
+                text: t("High Crowd")
+              },
+              {
+                label: t("Gate D (Alternative)"),
+                status: "open",
+                text: t("Very Low Queue")
+              },
+              {
+                label: t("Restroom R2 (Accessible)"),
+                status: "warning",
+                text: t("Moderate queue")
+              },
+              {
+                label: t("Metro Exit 3"),
+                status: "open",
+                text: t("Normal Movement")
+              }
             ].map((item, i) => (
               <div key={i} className="flex justify-between items-center border-b border-slate-800/40 pb-1.5 last:border-0 last:pb-0">
                 <span className="text-xs font-semibold text-slate-300 truncate mr-2">{item.label}</span>
                 <StatusBadge status={item.status} text={item.text} />
               </div>
             ))}
+
           </div>
-          <p className="text-[9px] text-slate-500 italic">{t("* Refreshed every 15s from staff reports.")}</p>
+          <p className="text-[9px] text-slate-500 italic">{t("Updated from authorized operational reports.")}</p>
         </div>
       </div>
 
@@ -134,12 +153,12 @@ export default function FanHomePage() {
         <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">{t("Quick Actions")}</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
           {[
-            { emoji: '🎫', label: t("Find Seat 214"), dest: 'Section 214', pref: routePreference },
+            { emoji: '🎫', label: t("Find My Seat"), dest: 'Section 214', pref: routePreference },
             { emoji: '♿', label: t("Accessible Toilet"), dest: 'Restroom R2', pref: 'wheelchair' },
             { emoji: '🚨', label: t("Medical Desk"), dest: 'Medical Desk', pref: routePreference },
-            { emoji: '🚇', label: t("Less Busy Exit"), dest: 'Metro Exit 3', pref: 'least_crowded' },
+            { emoji: '🚇', label: t("Transport Exit"), dest: 'Metro Exit 3', pref: 'least_crowded' },
           ].map((action, i) => (
-            <button 
+            <button
               key={i}
               onClick={() => handleQuickAction(action.dest, action.pref)}
               className="p-3 md:p-4 bg-stadiumNavy/60 border border-slate-800 hover:border-electricBlue/60 rounded-xl text-center space-y-1.5 transition-all hover:scale-[1.02] cursor-pointer active:scale-95"
@@ -211,7 +230,7 @@ export default function FanHomePage() {
             <p className="text-xs text-slate-400">{t("Scale fonts, contrast, wheelchair routing.")}</p>
           </div>
         </div>
-        <Link 
+        <Link
           to="/accessibility"
           className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg text-center shrink-0"
         >

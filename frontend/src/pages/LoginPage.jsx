@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className={`min-h-screen flex flex-col md:flex-row bg-slate-900 ${highContrast ? 'bg-black' : ''} text-slate-100`}>
       {/* Left visual panel - hidden on mobile, visible on desktop */}
       <div className="hidden md:flex md:w-1/2 lg:w-2/5 bg-slate-950 flex-col items-center justify-center p-8 relative overflow-hidden border-r border-slate-800">
-        
+
         {/* Subtle stadium-grid or route-line background */}
         <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +66,7 @@ export default function LoginPage() {
           <div className="ball-scene-container scale-95" aria-hidden="true">
             {/* Glow */}
             <div className="ball-glow" />
-            
+
             {/* Orbits */}
             <div className="orbit-ring-container">
               <div className="orbit-ring-1" />
@@ -84,9 +84,9 @@ export default function LoginPage() {
 
             {/* Soccer Ball */}
             <div className="ball-wrapper-anim">
-              <img 
-                src={soccerBall} 
-                alt="" 
+              <img
+                src={soccerBall}
+                alt=""
                 className="soccer-ball-img"
               />
             </div>
@@ -112,13 +112,13 @@ export default function LoginPage() {
 
       {/* Right panel - contains existing login card container */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
-        
+
         {/* On mobile: smaller animated football above login card */}
         <div className="md:hidden flex justify-center mb-6" aria-hidden="true">
           <div className="ball-scene-container scale-75">
             {/* Glow */}
             <div className="ball-glow" />
-            
+
             {/* Orbits */}
             <div className="orbit-ring-container">
               <div className="orbit-ring-1" />
@@ -127,9 +127,9 @@ export default function LoginPage() {
 
             {/* Soccer Ball */}
             <div className="ball-wrapper-anim">
-              <img 
-                src={soccerBall} 
-                alt="" 
+              <img
+                src={soccerBall}
+                alt=""
                 className="soccer-ball-img"
               />
             </div>
@@ -245,10 +245,11 @@ export default function LoginPage() {
             <span>{t("Sign In with Google")}</span>
           </button>
 
-          {/* Rapid Sandbox Entrance */}
+          {/* Quick Access
+ */}
           <div className="border-t border-slate-800 pt-4 text-center space-y-3">
             <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block">
-              {t("Rapid Sandbox Entrance (Bypass Login)")}
+              {t("Quick Access")}
             </span>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <button
@@ -256,21 +257,21 @@ export default function LoginPage() {
                 onClick={() => handleDemoSignIn('fan')}
                 className="px-3 py-1.5 bg-stadiumNavy hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-semibold text-pitchGreen cursor-pointer"
               >
-                {t("Demo Fan")}
+                {t("Continue as Fan")}
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoSignIn('staff')}
                 className="px-3 py-1.5 bg-stadiumNavy hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-semibold text-alertAmber cursor-pointer"
               >
-                {t("Demo Staff")}
+                {t("Continue as Staff")}
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoSignIn('organizer')}
                 className="px-3 py-1.5 bg-stadiumNavy hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-semibold text-criticalRed cursor-pointer"
               >
-                {t("Demo Organizer")}
+                {t("Continue as Organiser")}
               </button>
             </div>
           </div>

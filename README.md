@@ -87,4 +87,4 @@ StadiumPulse AI bridges this gap by marrying a verified graph-based venue databa
 ### Demo Mode
 For rapid testing and evaluation without setting up full Firebase production accounts:
 - Set `DEMO_MODE=true` in `backend/.env`. This enables mock role verification and credential-free operations.
-- The UI contains buttons like **"Demo Fan"**, **"Demo Staff"**, and **"Demo Organizer"** 
+- The UI contains buttons like **"Continue as Fan"**, **"Continue as Staff"**, and **"Continue as Organiser"** 
