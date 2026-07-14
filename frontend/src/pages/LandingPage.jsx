@@ -11,11 +11,12 @@ export default function LandingPage() {
 
   const handleDemoMode = (role) => {
     signInAsDemoRole(role);
-    if (['volunteer', 'staff', 'organizer'].includes(role)) {
-      navigate('/staff-dashboard');
-    } else {
-      navigate('/fan-home');
-    }
+
+    const destination = ['volunteer', 'staff', 'organizer'].includes(role)
+      ? '/staff-dashboard'
+      : '/fan-home';
+
+    navigate(destination);
   };
 
   const DEMO_ROLES = [
@@ -72,7 +73,7 @@ export default function LandingPage() {
 
       {/* ── Hero (title + animated ball) ──────────────────────────────────────── */}
       <main className="flex-1 max-w-5xl mx-auto px-6 py-10 flex flex-col gap-10">
-        
+
         {/* Hero section */}
         <section className="flex flex-col md:flex-row items-center justify-between gap-12 pt-4">
           {/* Left side – text & CTAs */}
@@ -123,7 +124,7 @@ export default function LandingPage() {
             <div className="ball-scene-container">
               {/* Electric blue glow */}
               <div className="ball-glow" aria-hidden="true" />
-              
+
               {/* Faint orbit rings */}
               <div className="orbit-ring-container" aria-hidden="true">
                 <div className="orbit-ring-1" />
@@ -143,9 +144,9 @@ export default function LandingPage() {
 
               {/* Floating and rotating soccer ball */}
               <div className="ball-wrapper-anim">
-                <img 
-                  src={soccerBall} 
-                  alt="" 
+                <img
+                  src={soccerBall}
+                  alt=""
                   className="soccer-ball-img"
                 />
               </div>

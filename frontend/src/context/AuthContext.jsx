@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  auth, 
-  db, 
-  isFirebaseEnabled, 
-  googleProvider 
+import {
+  auth,
+  db,
+  isFirebaseEnabled,
+  googleProvider
 } from '../config/firebase';
-import { 
-  signInWithPopup, 
-  signInWithEmailAndPassword, 
-  signOut, 
+import {
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
   signInAnonymously
 } from 'firebase/auth';
@@ -36,13 +36,13 @@ export function AuthProvider({ children }) {
       if (firebaseUser) {
         try {
           const token = await firebaseUser.getIdToken();
-          
+
           let role = 'fan';
           try {
             // Fetch user role from Firestore
             const userRef = doc(db, 'users', firebaseUser.uid);
             const userSnap = await getDoc(userRef);
-            
+
             if (userSnap.exists()) {
               role = userSnap.data().role || 'fan';
             } else {
@@ -53,7 +53,7 @@ export function AuthProvider({ children }) {
               } else if (firebaseUser.email?.endsWith('@stadiumpulse-admin.com')) {
                 emailRole = 'organizer';
               }
-              
+
               await setDoc(userRef, {
                 uid: firebaseUser.uid,
                 email: firebaseUser.email || '',
@@ -104,52 +104,20 @@ export function AuthProvider({ children }) {
   }, []);
 
   // Sandbox demo helper
-  const signInAsDemoRole = async (role) => {
-    if (isFirebaseEnabled) {
-      try {
-        setLoading(true);
-        // Sign in anonymously to Firebase
-        const credential = await signInAnonymously(auth);
-        const firebaseUser = credential.user;
-        
-        // Write their role to Firestore users collection
-        const userRef = doc(db, 'users', firebaseUser.uid);
-        await setDoc(userRef, {
-          uid: firebaseUser.uid,
-          email: `${role}@stadiumpulse-demo.com`,
-          displayName: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-          role: role,
-          createdAt: new Date().toISOString()
-        });
-        console.log(`Signed in anonymously to Firebase as role: ${role}`);
-      } catch (error) {
-        console.error('Anonymous demo sign-in failed, falling back to mock session:', error.message);
-        // Mock fallback if Firebase anonymous auth is disabled
-        const demoUser = {
-          uid: `demo_user_${role}`,
-          email: `${role}@stadiumpulse-demo.com`,
-          displayName: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-          role: role,
-          token: `demo_token_for_${role}`
-        };
-        setUser(demoUser);
-        localStorage.setItem('stadiumpulse_user', JSON.stringify(demoUser));
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // Pure local mock mode
-      const demoUser = {
-        uid: `demo_user_${role}`,
-        email: `${role}@stadiumpulse-demo.com`,
-        displayName: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-        role: role,
-        token: `demo_token_for_${role}`
-      };
-      setUser(demoUser);
-      localStorage.setItem('stadiumpulse_user', JSON.stringify(demoUser));
-      console.log(`Signed in successfully as Demo role: ${role}`);
-    }
+  const signInAsDemoRole = (role) => {
+    const demoUser = {
+      uid: `demo_user_${role}`,
+      email: `${role}@stadiumpulse-demo.com`,
+      displayName: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+      role,
+      token: `demo_token_for_${role}`,
+      isDemo: true,
+    };
+
+    setUser(demoUser);
+    localStorage.setItem('stadiumpulse_user', JSON.stringify(demoUser));
+
+    console.log(`Started instant demo session as: ${role}`);
   };
 
   const loginWithGoogle = async () => {
