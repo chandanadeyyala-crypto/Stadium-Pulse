@@ -4,11 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
 import EmptyState from '../components/EmptyState';
-import { 
-  BellRing, 
-  CheckCircle, 
-  XCircle, 
-  Loader2, 
+import {
+  BellRing,
+  CheckCircle,
+  XCircle,
+  Loader2,
   RefreshCw,
   Languages,
   Users,
@@ -93,7 +93,7 @@ export default function AlertApprovalPage() {
       <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl text-xs text-slate-300 font-medium leading-relaxed flex items-start space-x-3">
         <AlertTriangle size={18} className="text-indigo-400 shrink-0 mt-0.5" />
         <span>
-          <strong className="text-white">Anti-Hallucination Policy:</strong> All alerts below were drafted by AI using only the original staff report text. No stadium facts were invented. You may edit the message before approving. Alerts are NOT live until you click <strong className="text-pitchGreen">Approve &amp; Broadcast</strong>.
+          <strong className="text-white">Verified Assistance Policy:</strong> All alerts below were drafted by AI using only the original staff report text. No stadium facts were invented. You may edit the message before approving. Alerts are NOT live until you click <strong className="text-pitchGreen">Approve &amp; Broadcast</strong>.
         </span>
       </div>
 

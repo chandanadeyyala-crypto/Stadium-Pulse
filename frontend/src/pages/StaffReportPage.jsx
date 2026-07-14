@@ -4,13 +4,13 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import StatusBadge from '../components/StatusBadge';
-import { 
-  FileText, 
-  Mic, 
-  MicOff, 
-  MapPin, 
-  AlertTriangle, 
-  Loader2, 
+import {
+  FileText,
+  Mic,
+  MicOff,
+  MapPin,
+  AlertTriangle,
+  Loader2,
   CheckCircle,
   Sparkles,
   Send
@@ -249,8 +249,8 @@ export default function StaffReportPage() {
               </div>
 
               <div className="bg-slate-900/60 p-3 rounded-xl text-[10px] text-slate-500 border border-slate-800 font-mono leading-relaxed">
-                AI Draft. Staff must approve before fan broadcast.<br/>
-                Anti-hallucination: Only report details are used.
+                AI Draft. Staff must approve before fan broadcast.<br />
+                Verified Assistance: Only report details are used.
               </div>
 
               <button

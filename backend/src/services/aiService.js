@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// CRITICAL: System prompt enforces anti-hallucination policies
+// CRITICAL: System prompt enforces Verified Assistance policies
 const SYSTEM_PROMPT = `You are StadiumPulse AI, an operations and fan assistance AI helper for the FIFA World Cup 2026.
 You are grounded in a verified venue database.
 
@@ -101,7 +101,7 @@ export async function callGroq(prompt, contextText = '', customSystemPrompt = nu
  */
 function localMockAIResponse(prompt, contextText) {
   const query = prompt.toLowerCase();
-  
+
   if (!contextText || contextText.trim() === '') {
     return `Answer: I don’t have verified information for that right now.
 Source: System Database

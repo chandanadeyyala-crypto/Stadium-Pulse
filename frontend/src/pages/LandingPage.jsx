@@ -23,22 +23,22 @@ export default function LandingPage() {
     {
       role: 'fan',
       emoji: '🎫',
-      label: 'Fan',
-      desc: 'Navigate, query AI, access your seat route.',
+      label: 'Fan Experience',
+      desc: 'Find your seat, explore venue services and receive matchday guidance',
       color: 'border-electricBlue/40 hover:border-electricBlue',
     },
     {
       role: 'staff',
       emoji: '🛡️',
-      label: 'Staff',
-      desc: 'Report incidents, approve alert drafts.',
+      label: 'Venue operations',
+      desc: 'Report incidents, coordinate responses and manage public alerts',
       color: 'border-alertAmber/40 hover:border-alertAmber',
     },
     {
       role: 'organizer',
       emoji: '⚡',
-      label: 'Command Center',
-      desc: 'Crowd maps, broadcast control, analytics.',
+      label: 'Operations Command Center',
+      desc: 'Monitor venue activity, crowd movement and operational decisions',
       color: 'border-criticalRed/40 hover:border-criticalRed',
     },
   ];
@@ -47,7 +47,7 @@ export default function LandingPage() {
     { icon: Navigation, label: 'Smart Routing', color: 'text-pitchGreen' },
     { icon: Languages, label: 'AI Translation', color: 'text-alertAmber' },
     { icon: Accessibility, label: 'Accessibility', color: 'text-indigo-400' },
-    { icon: ShieldCheck, label: 'Anti-Hallucination', color: 'text-electricBlue' },
+    { icon: ShieldCheck, label: 'Verified Assistance', color: 'text-electricBlue' },
   ];
 
   return (
@@ -58,7 +58,7 @@ export default function LandingPage() {
         <div className="flex items-center space-x-2 select-none">
           <div className="bg-electricBlue text-white p-1.5 rounded-lg font-bold text-sm">🏟️</div>
           <span className="font-extrabold text-lg tracking-tight text-white">
-            StadiumFlow <span className="text-electricBlue">AI</span>
+            StadiumPulse <span className="text-electricBlue">AI</span>
           </span>
         </div>
         <div className="flex items-center space-x-3">
@@ -98,7 +98,7 @@ export default function LandingPage() {
                 }}
                 className="px-5 py-2.5 bg-electricBlue hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
-                {t('Explore Demo')}
+                {t('Explore Platform')}
               </button>
               <button
                 onClick={() => navigate('/login')}
@@ -157,7 +157,7 @@ export default function LandingPage() {
         {/* ── Demo role selector ───────────────────────────────────────────── */}
         <div id="demo-selector" className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-5">
           <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
-            {t('Try the platform — choose a role')}
+            {t('Choose your matchday experience')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {DEMO_ROLES.map(({ role, emoji, label, desc, color }) => (
@@ -177,18 +177,18 @@ export default function LandingPage() {
 
           <div className="flex flex-wrap items-center gap-3 text-[10px] text-slate-500 font-semibold border-t border-slate-800 pt-4">
             <ShieldCheck size={12} className="text-pitchGreen" />
-            <span>{t('Anti-Hallucination Active')}</span>
+            <span>{t('Crowd-aware navigation')}</span>
             <span>·</span>
-            <span>{t('Gemini Flash & Groq pipeline')}</span>
+            <span>{t('Multilingual AI support')}</span>
             <span>·</span>
-            <span>{t('OpenStreetMap navigation')}</span>
+            <span>{t('Verified-source guidance')}</span>
           </div>
         </div>
 
       </main>
 
       <footer className="px-6 py-4 border-t border-slate-800 text-center text-[10px] text-slate-600 bg-stadiumNavy/10">
-        {t('© FIFA World Cup 2026 Operations Prototype. Sandbox mode.')}
+        {t('© FIFA World Cup 2026 Operations.')}
       </footer>
 
     </div>

@@ -1,11 +1,11 @@
 import React from 'react';
 import SourceBadge from './SourceBadge';
-import { 
-  Bot, 
-  User, 
-  Lightbulb, 
-  CheckCircle, 
-  AlertOctagon 
+import {
+  Bot,
+  User,
+  Lightbulb,
+  CheckCircle,
+  AlertOctagon
 } from 'lucide-react';
 
 export default function AIMessage({ message }) {
@@ -76,13 +76,12 @@ export default function AIMessage({ message }) {
       )}
 
       {/* Message Box */}
-      <div className={`p-4 rounded-2xl max-w-[85%] sm:max-w-[75%] border shadow-md space-y-3 ${
-        isBot 
+      <div className={`p-4 rounded-2xl max-w-[85%] sm:max-w-[75%] border shadow-md space-y-3 ${isBot
           ? isDataMissing
             ? 'bg-red-500/10 border-red-500/30 text-slate-200'
             : 'bg-stadiumNavy/75 border-slate-700/60 text-slate-200'
           : 'bg-electricBlue text-white border-electricBlue'
-      }`}>
+        }`}>
         {!isBot ? (
           /* User Message Text */
           <p className="text-sm font-semibold leading-relaxed">{text}</p>
@@ -93,7 +92,7 @@ export default function AIMessage({ message }) {
             {isDataMissing && (
               <div className="bg-red-500/20 border border-red-500/40 p-2.5 rounded-lg text-xs text-criticalRed font-bold flex items-center space-x-2">
                 <AlertOctagon size={16} className="shrink-0 animate-bounce" />
-                <span>Anti-Hallucination Guard: Missing Grounding Data</span>
+                <span>Verified Assistance Guard: Missing Grounding Data</span>
               </div>
             )}
 
