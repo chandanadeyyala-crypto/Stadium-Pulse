@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
-import { UserCheck, ShieldAlert, SunMoon, Type, Languages, ShieldCheck, Navigation } from 'lucide-react';
+import { SunMoon, Type, Languages, ShieldCheck, Navigation } from 'lucide-react';
 import soccerBall from '../assets/soccer-ball.svg';
 
 export default function LoginPage() {

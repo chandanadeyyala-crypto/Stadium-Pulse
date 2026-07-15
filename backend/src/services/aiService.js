@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// CRITICAL: System prompt enforces Verified Assistance policies
+
 const SYSTEM_PROMPT = `You are StadiumPulse AI, an operations and fan assistance AI helper for the FIFA World Cup 2026.
 You are grounded in a verified venue database.
 
@@ -20,11 +20,9 @@ Source: [Specify which verified database node or alert was used]
 Reason: [Explain why this recommendation is safe/efficient based on the data]
 Action: [The recommended immediate next step for the user, e.g. "Go to Gate D", "Show map"]`;
 
-/**
- * Call Gemini API (defaults to 3.5 Flash)
- */
+
 export async function callGemini(prompt, contextText = '', customSystemPrompt = null) {
-  // Gemini API key is read from .env
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
     throw new Error('Gemini API key is not configured.');
@@ -44,7 +42,7 @@ export async function callGemini(prompt, contextText = '', customSystemPrompt = 
       parts: [{ text: systemInstruction }]
     },
     generationConfig: {
-      temperature: 0.1, // low temperature to ensure strict adherence to context
+      temperature: 0.1,
       maxOutputTokens: 1000
     }
   };
@@ -57,11 +55,9 @@ export async function callGemini(prompt, contextText = '', customSystemPrompt = 
   return answer;
 }
 
-/**
- * Call Groq API (fallback)
- */
+
 export async function callGroq(prompt, contextText = '', customSystemPrompt = null) {
-  // Groq API key is read from .env
+
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey || apiKey === 'your_groq_api_key_here') {
     throw new Error('Groq API key is not configured.');
@@ -72,7 +68,7 @@ export async function callGroq(prompt, contextText = '', customSystemPrompt = nu
   const url = 'https://api.groq.com/openai/v1/chat/completions';
 
   const payload = {
-    model: 'llama-3.1-8b-instant', // fast active fallback model
+    model: 'llama-3.1-8b-instant',
     messages: [
       { role: 'system', content: systemInstruction },
       { role: 'user', content: prompt }
@@ -95,10 +91,7 @@ export async function callGroq(prompt, contextText = '', customSystemPrompt = nu
   return answer;
 }
 
-/**
- * Local simulation fallback when no keys are provided or all API calls fail.
- * Strictly checks the context for terms to prevent hallucination.
- */
+
 function localMockAIResponse(prompt, contextText) {
   const query = prompt.toLowerCase();
 
@@ -109,7 +102,6 @@ Reason: No verified context matched your query.
 Action: Contact a nearby physical volunteer or information desk.`;
   }
 
-  // Simple local keywords parser matching verified context data
   if (query.includes('gate') && (query.includes('where') || query.includes('how') || query.includes('status'))) {
     if (contextText.includes('Gate A') && query.includes('a')) {
       return `Answer: Gate A (North Entrance) is open and currently reports normal activity.
@@ -164,19 +156,15 @@ Action: Walk out via Gate D or follow egress signs to Metro Exit 3.`;
     }
   }
 
-  // If query does not match any specific keyword
+
   return `Answer: I don’t have verified information for that right now.
 Source: Verified Venue Knowledge Base
 Reason: The details requested were not found in current operational data.
 Action: Speak with a volunteer wearing the electric blue StadiumPulse vest.`;
 }
 
-/**
- * Ask AI with multi-provider fallbacks.
- * Flow: Gemini -> Groq -> Local mock / Cache
- */
 export async function askWithFallback(prompt, contextText = '') {
-  // Check if context is completely empty
+
   if (!contextText || contextText.trim() === '') {
     return `Answer: I don’t have verified information for that right now.
 Source: Grounding System Check
@@ -184,21 +172,19 @@ Reason: No verified stadium data was found relevant to your search query.
 Action: Check your query spelling or search for general gate status.`;
   }
 
-  // 1. Try Gemini Flash
   try {
     const geminiResponse = await callGemini(prompt, contextText);
     return geminiResponse;
   } catch (geminiError) {
     console.warn('Gemini Flash call failed, falling back to Groq. Error:', geminiError.message);
 
-    // 2. Try Groq (Llama 3 fallback)
     try {
       const groqResponse = await callGroq(prompt, contextText);
       return groqResponse;
     } catch (groqError) {
       console.warn('Groq Llama fallback failed, using local Mock engine. Error:', groqError.message);
 
-      // 3. Last resort - local deterministic mock response based strictly on the verified context
+
       return localMockAIResponse(prompt, contextText);
     }
   }

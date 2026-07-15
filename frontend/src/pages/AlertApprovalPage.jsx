@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import StatusBadge from '../components/StatusBadge';
@@ -37,7 +37,6 @@ export default function AlertApprovalPage() {
         headers: { 'Authorization': `Bearer ${token}`, 'x-demo-role': user?.role || 'staff' }
       });
       setPendingAlerts(res.data);
-      // Initialise editable messages
       const msgs = {};
       res.data.forEach(a => { msgs[a.id] = a.message; });
       setEditedMessage(msgs);

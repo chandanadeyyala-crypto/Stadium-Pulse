@@ -1,18 +1,16 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  BellRing, 
-  Map, 
-  Database, 
-  Settings, 
+import {
+  LayoutDashboard,
+  FileText,
+  BellRing,
+  Map,
+  Database,
+  Settings,
   UserCircle,
   HelpCircle,
   X,
   Shield,
-  MessageSquare
 } from 'lucide-react';
 
 export default function Sidebar({ mobileOpen = false, onClose }) {
@@ -71,11 +69,10 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
             key={item.name}
             to={item.path}
             onClick={onClose}
-            className={({ isActive }) => 
-              `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                isActive 
-                  ? 'bg-electricBlue/15 text-white border border-electricBlue/30' 
-                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            className={({ isActive }) =>
+              `flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
+                ? 'bg-electricBlue/15 text-white border border-electricBlue/30'
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
               }`
             }
           >
@@ -107,9 +104,8 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
 
       {/* Mobile: slide-over drawer */}
       <aside
-        className={`fixed top-0 left-0 h-full w-72 bg-[var(--bg-primary)] border-r border-white/8 z-40 flex flex-col transition-transform duration-300 ease-in-out md:hidden shadow-2xl ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 h-full w-72 bg-[var(--bg-primary)] border-r border-white/8 z-40 flex flex-col transition-transform duration-300 ease-in-out md:hidden shadow-2xl ${mobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <NavContent />
       </aside>

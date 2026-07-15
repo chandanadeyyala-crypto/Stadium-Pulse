@@ -1,11 +1,10 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  Home, 
-  Map, 
-  HelpCircle, 
-  Bell, 
-  Settings 
+import {
+  Home,
+  Map,
+  HelpCircle,
+  Bell,
+  Settings
 } from 'lucide-react';
 
 export default function BottomNav() {
@@ -23,11 +22,10 @@ export default function BottomNav() {
         <NavLink
           key={item.name}
           to={item.path}
-          className={({ isActive }) => 
-            `flex flex-col items-center justify-center flex-1 py-1 text-center transition-all ${
-              isActive 
-                ? 'text-electricBlue scale-105' 
-                : 'text-slate-400 hover:text-slate-200'
+          className={({ isActive }) =>
+            `flex flex-col items-center justify-center flex-1 py-1 text-center transition-all ${isActive
+              ? 'text-electricBlue scale-105'
+              : 'text-slate-400 hover:text-slate-200'
             }`
           }
         >

@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
 import AIMessage from '../components/AIMessage';
-import { 
-  Send, 
-  Mic, 
-  MicOff, 
+import {
+  Send,
+  Mic,
+  MicOff,
   Loader2,
   Trash2,
   Sparkles
@@ -35,7 +35,7 @@ Action: Ask me a question about gate locations, accessible restrooms, or exiting
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  
+
   const chatEndRef = useRef(null);
   const recognitionRef = useRef(null);
 
@@ -51,7 +51,7 @@ Action: Ask me a question about gate locations, accessible restrooms, or exiting
       const rec = new SpeechRecognition();
       rec.continuous = false;
       rec.interimResults = false;
-      
+
       const langMap = {
         English: 'en-US',
         Spanish: 'es-ES',
@@ -108,14 +108,14 @@ Action: Ask me a question about gate locations, accessible restrooms, or exiting
     const userMsgId = `user_${Date.now()}`;
     const userMsg = { id: userMsgId, sender: 'user', text: queryText };
     setMessages(prev => [...prev, userMsg]);
-    
+
     if (!textToSend) setInput('');
     setLoading(true);
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const token = localStorage.getItem('stadiumpulse_user') 
-        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token 
+      const token = localStorage.getItem('stadiumpulse_user')
+        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token
         : '';
 
       const response = await axios.post(`${backendUrl}/api/ai/ask`, {
@@ -180,7 +180,7 @@ Action: Select a suggested query below or type your question.`
 
   return (
     <div className="flex flex-col h-[calc(100vh-130px)] md:h-[calc(100vh-100px)] max-w-4xl mx-auto operations-card accent-ai overflow-hidden">
-      
+
       {/* Assistant Header */}
       <div className="p-4 bg-stadiumNavy/60 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center space-x-2.5">
@@ -207,7 +207,7 @@ Action: Select a suggested query below or type your question.`
           </select>
 
           {/* Reset chat */}
-          <button 
+          <button
             onClick={clearChat}
             className="p-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:text-white"
             title="Clear Chat History"
@@ -259,11 +259,10 @@ Action: Select a suggested query below or type your question.`
         <button
           type="button"
           onClick={handleMicToggle}
-          className={`p-3 rounded-xl border flex items-center justify-center transition-all ${
-            isListening 
-              ? 'bg-criticalRed border-criticalRed text-white animate-pulse' 
+          className={`p-3 rounded-xl border flex items-center justify-center transition-all ${isListening
+              ? 'bg-criticalRed border-criticalRed text-white animate-pulse'
               : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-white'
-          }`}
+            }`}
           title="Speech-to-Text Voice Input"
         >
           {isListening ? <MicOff size={18} /> : <Mic size={18} />}

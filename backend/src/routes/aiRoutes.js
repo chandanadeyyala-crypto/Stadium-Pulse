@@ -8,7 +8,6 @@ import { verifyAuthToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// POST /api/ai/ask - Fan and staff assistant grounded Q&A
 router.post('/ask', verifyAuthToken, async (req, res) => {
   const { question, language = 'English', stadiumId, location } = req.body;
   const role = req.user?.role || 'fan';
@@ -20,7 +19,6 @@ router.post('/ask', verifyAuthToken, async (req, res) => {
   try {
     const normalized = normalizeQuestion(question);
 
-    // 1. Check in-memory cache
     const cachedResponse = await cacheService.getQuery(normalized, role, language);
     if (cachedResponse) {
       return res.json({
@@ -30,16 +28,14 @@ router.post('/ask', verifyAuthToken, async (req, res) => {
       });
     }
 
-    // 2. Fetch context from verified stadium records
     const contextText = await venueDataService.findRelevantContext(normalized);
 
-    // 3. Fallback check: If no verified context matches, bypass LLM to prevent hallucination
     if (!contextText || contextText.trim() === '') {
       const emptyContextResponse = `Answer: I don’t have verified information for that right now.
 Source: Grounding Check
 Reason: The venue query did not map to any active gate, section, facility, or staff report.
 Action: Please check the spelling of your gate/section or consult an information kiosk.`;
-      
+
       return res.json({
         success: true,
         response: emptyContextResponse,
@@ -47,15 +43,12 @@ Action: Please check the spelling of your gate/section or consult an information
       });
     }
 
-    // 4. Query AI model pipeline (Gemini -> Groq -> Local Mock)
     let aiResponse = await askWithFallback(question, contextText);
 
-    // 5. If user requested a translation, translate the final AI answer
     if (language.toLowerCase() !== 'english' && language.toLowerCase() !== 'en') {
       aiResponse = await translateText(aiResponse, language);
     }
 
-    // 6. Save answer in cache
     await cacheService.setQuery(normalized, role, language, aiResponse);
 
     res.json({
@@ -72,7 +65,6 @@ Action: Please check the spelling of your gate/section or consult an information
   }
 });
 
-// POST /api/ai/translate - Translate alert or description
 router.post('/translate', async (req, res) => {
   const { text, targetLang } = req.body;
 
@@ -97,7 +89,7 @@ router.post('/translate', async (req, res) => {
   }
 });
 
-// Helper for offline fallback query parsing
+
 function getLocalFallbackAnalysis(text, inputLang, role) {
   const cleaned = text.toLowerCase();
   let category = 'other';
@@ -109,7 +101,7 @@ function getLocalFallbackAnalysis(text, inputLang, role) {
   let targetAudience = 'fans';
   let actionableInstruction = text;
 
-  // Extract location
+
   if (cleaned.includes('gate b') || cleaned.includes('puerta b') || cleaned.includes('porte b')) {
     location = 'Gate B';
   } else if (cleaned.includes('gate d') || cleaned.includes('puerta d') || cleaned.includes('porte d')) {
@@ -120,7 +112,6 @@ function getLocalFallbackAnalysis(text, inputLang, role) {
     location = 'Restroom R2';
   }
 
-  // Extract category
   if (cleaned.includes('medica') || cleaned.includes('medico') || cleaned.includes('sick') || cleaned.includes('hurt') || cleaned.includes('dolor') || cleaned.includes('doctor')) {
     category = 'medical';
     urgency = 'high';
@@ -144,7 +135,6 @@ function getLocalFallbackAnalysis(text, inputLang, role) {
     actionRequired = 'notify operations response team';
   }
 
-  // Generate English summaries/instruction based on role
   let englishTranslation = text;
   if (inputLang === 'Spanish') {
     if (cleaned.includes('puerta b está muy llena')) englishTranslation = "Gate B is very crowded.";
@@ -188,7 +178,6 @@ function getLocalFallbackAnalysis(text, inputLang, role) {
   }
 }
 
-// POST /api/ai/process-query - Unified Operations Assistant (translates & extracts)
 router.post('/process-query', verifyAuthToken, async (req, res) => {
   const { text, inputLang, role } = req.body;
   if (!text) {

@@ -40,7 +40,6 @@ export default function StaffReportPage() {
   const [error, setError] = useState('');
   const recognitionRef = useRef(null);
 
-  // Setup SpeechRecognition
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -92,7 +91,6 @@ export default function StaffReportPage() {
   const handleApproveAndSubmit = async () => {
     if (!aiPreview) return;
     setSubmitting(true);
-    // The report is already saved on generate. We just need to navigate to approval.
     setTimeout(() => {
       setSubmitting(false);
       setSubmitted(true);

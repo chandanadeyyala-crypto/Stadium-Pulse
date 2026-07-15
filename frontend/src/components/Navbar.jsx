@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
-import { 
-  ShieldAlert, 
+import {
+  ShieldAlert,
   Sun,
   Moon,
   Eye,
-  Type, 
-  Languages, 
-  LogOut, 
+  Type,
+  Languages,
+  LogOut,
   Menu,
-  X,
   Volume2,
   VolumeX,
   UserCheck,
   Bell,
-  ShieldCheck
 } from 'lucide-react';
 
 export default function Navbar({ showHamburger = false, onHamburgerClick }) {
   const { user, logout } = useAuth();
-  const { 
-    highContrast, setHighContrast, 
+  const {
+    highContrast, setHighContrast,
     textScale, setTextScale,
     speechEnabled, setSpeechEnabled,
     language, setLanguage,
     theme, setTheme
   } = useAccessibility();
   const { t } = useTranslation();
-  
+
   const [langOpen, setLangOpen] = useState(false);
   const [sosActive, setSosActive] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -39,7 +37,6 @@ export default function Navbar({ showHamburger = false, onHamburgerClick }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Close menus on route change
   useEffect(() => {
     setLangOpen(false);
     setMobileMenuOpen(false);
@@ -81,7 +78,7 @@ export default function Navbar({ showHamburger = false, onHamburgerClick }) {
   return (
     <>
       <nav className="operations-card rounded-none sticky top-0 z-50 px-3 md:px-4 py-2.5 md:py-3 flex items-center justify-between border-b border-white/5">
-        
+
         {/* Left: Hamburger (staff mobile) + Brand */}
         <div className="flex items-center space-x-2 min-w-0">
           {/* Hamburger for staff on mobile */}
@@ -94,7 +91,7 @@ export default function Navbar({ showHamburger = false, onHamburgerClick }) {
               <Menu size={18} />
             </button>
           )}
-          
+
           {/* Brand */}
           <div className="flex items-center space-x-2 select-none min-w-0">
             <div className="bg-electricBlue text-white p-1.5 md:p-2 rounded-lg font-bold flex items-center justify-center flex-shrink-0 text-sm md:text-base">
@@ -116,9 +113,9 @@ export default function Navbar({ showHamburger = false, onHamburgerClick }) {
 
         {/* Right: Controls */}
         <div className="flex items-center space-x-1.5 md:space-x-2 flex-shrink-0">
-          
+
           {/* SOS — always visible */}
-          <button 
+          <button
             onClick={handleEmergencySOS}
             className="bg-criticalRed hover:bg-red-600 text-white font-bold px-2 py-1.5 md:px-3 rounded-lg flex items-center space-x-1 text-xs animate-pulse flex-shrink-0"
             aria-label="Trigger Emergency SOS"

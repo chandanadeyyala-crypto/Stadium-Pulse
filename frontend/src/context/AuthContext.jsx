@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import {
   auth,
   db,
@@ -9,8 +9,7 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
-  signInAnonymously
+  onAuthStateChanged
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
@@ -20,10 +19,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Handle Firebase auth listener
   useEffect(() => {
     if (!isFirebaseEnabled) {
-      // Bypassed if firebase is disabled
       const savedUser = localStorage.getItem('stadiumpulse_user');
       if (savedUser) {
         setUser(JSON.parse(savedUser));
@@ -39,14 +36,12 @@ export function AuthProvider({ children }) {
 
           let role = 'fan';
           try {
-            // Fetch user role from Firestore
             const userRef = doc(db, 'users', firebaseUser.uid);
             const userSnap = await getDoc(userRef);
 
             if (userSnap.exists()) {
               role = userSnap.data().role || 'fan';
             } else {
-              // Document doesn't exist, create it (default to fan, or if email matches specific patterns)
               let emailRole = 'fan';
               if (firebaseUser.email?.endsWith('@stadiumpulse.com')) {
                 emailRole = 'staff';
@@ -65,7 +60,6 @@ export function AuthProvider({ children }) {
             }
           } catch (dbErr) {
             console.warn('Firestore user fetch failed, defaulting to email rules or fan role:', dbErr.message);
-            // Default check based on email
             if (firebaseUser.email?.endsWith('@stadiumpulse.com')) {
               role = 'staff';
             } else if (firebaseUser.email?.endsWith('@stadiumpulse-admin.com')) {
@@ -87,7 +81,6 @@ export function AuthProvider({ children }) {
           console.error('Error fetching user profile in auth state change:', error.message);
         }
       } else {
-        // User is logged out of Firebase. Check if they are logged in as a local demo user
         const saved = localStorage.getItem('stadiumpulse_user');
         const parsed = saved ? JSON.parse(saved) : null;
         if (parsed && parsed.uid.startsWith('demo_user_')) {
@@ -103,7 +96,6 @@ export function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  // Sandbox demo helper
   const signInAsDemoRole = (role) => {
     const demoUser = {
       uid: `demo_user_${role}`,
@@ -130,7 +122,6 @@ export function AuthProvider({ children }) {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.warn('Firebase Google Sign In failed, falling back to mock Google Sign In:', error.message);
-      // Fallback mock login so the app works seamlessly during demo/testing
       const demoUser = {
         uid: 'google_demo_user',
         email: 'google-user@gmail.com',

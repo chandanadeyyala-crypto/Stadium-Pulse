@@ -1,13 +1,11 @@
 import React from 'react';
 import SourceBadge from './SourceBadge';
-import { 
-  Milestone, 
-  Flame, 
-  Accessibility, 
-  ShieldCheck, 
-  Compass, 
+import {
+  Flame,
+  Accessibility,
+  ShieldCheck,
+  Compass,
   ArrowRight,
-  TrendingUp,
   AlertTriangle
 } from 'lucide-react';
 

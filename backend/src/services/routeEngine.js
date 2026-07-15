@@ -1,10 +1,4 @@
-/**
- * StadiumPulse AI Graph-Based Route Engine
- * Models stadium layouts as nodes and weighted edges.
- * Performs Dijkstra's algorithm with dynamic weights based on crowd surges, closures, and accessibility.
- */
 
-// Predefined verified venue graph nodes
 export const STADIUM_NODES = {
   "Gate A": { id: "Gate A", name: "Gate A (North Entrance)", type: "gate", description: "North main gate, close to parking lot A" },
   "Gate B": { id: "Gate B", name: "Gate B (South Entrance)", type: "gate", description: "South secondary gate, close to rideshare zone" },
@@ -17,16 +11,13 @@ export const STADIUM_NODES = {
   "Concourse West": { id: "Concourse West", name: "Concourse West Corridor", type: "corridor", description: "Main western thoroughfare containing stairs" }
 };
 
-// Predefined verified edges
-// distance is in meters
-// baseCrowd is a density multiplier between 1.0 (empty) and 5.0 (extremely heavy)
-// isAccessible specifies if the route has no stairs (wheelchair/stroller friendly)
+
 export const STADIUM_EDGES = [
   { from: "Gate A", to: "Concourse West", distance: 100, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
   { from: "Gate B", to: "Concourse West", distance: 120, isAccessible: true, baseCrowd: 1.2, isBlocked: false },
   { from: "Gate D", to: "Concourse East", distance: 80, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
-  { from: "Concourse West", to: "Section 214", distance: 150, isAccessible: false, baseCrowd: 1.1, isBlocked: false }, // Stairs only
-  { from: "Concourse East", to: "Section 214", distance: 200, isAccessible: true, baseCrowd: 1.0, isBlocked: false },  // Elevator / Ramp
+  { from: "Concourse West", to: "Section 214", distance: 150, isAccessible: false, baseCrowd: 1.1, isBlocked: false },
+  { from: "Concourse East", to: "Section 214", distance: 200, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
   { from: "Concourse West", to: "Restroom R2", distance: 50, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
   { from: "Concourse East", to: "Medical Desk", distance: 60, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
   { from: "Gate A", to: "Metro Exit 3", distance: 300, isAccessible: true, baseCrowd: 1.3, isBlocked: false },
@@ -34,9 +25,7 @@ export const STADIUM_EDGES = [
   { from: "Gate D", to: "Metro Exit 3", distance: 400, isAccessible: true, baseCrowd: 1.1, isBlocked: false }
 ];
 
-/**
- * Calculates paths using Dijkstra's Algorithm.
- * 
+/*
  * @param {string} startNodeId - Starting node ID
  * @param {string} endNodeId - Destination node ID
  * @param {string} preference - Route type ('fastest', 'least_crowded', 'wheelchair', 'family', 'emergency')
@@ -50,29 +39,26 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
     };
   }
 
-  // 1. Build adjacency list representation of the graph
+
   const graph = {};
   for (const nodeId in STADIUM_NODES) {
     graph[nodeId] = [];
   }
 
-  // Helper to adjust edge weight dynamically based on active alerts
   const getDynamicWeight = (edge) => {
     let weight = edge.distance;
     let crowdMultiplier = edge.baseCrowd || 1.0;
     let blocked = edge.isBlocked;
 
-    // Check alerts targeting specific nodes on this edge
     activeAlerts.forEach(alert => {
       const target = alert.target || '';
-      // If alert states the location is crowded
       if (target === edge.from || target === edge.to) {
         if (alert.severity === 'critical') {
-          blocked = true; // Complete closure/blockage
+          blocked = true;
         } else if (alert.severity === 'warning') {
-          crowdMultiplier += 2.0; // Moderate penalty
+          crowdMultiplier += 2.0;
         } else if (alert.severity === 'info') {
-          crowdMultiplier += 0.5; // Slight penalty
+          crowdMultiplier += 0.5;
         }
       }
     });
@@ -81,30 +67,26 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
       return Infinity;
     }
 
-    // Adjust algorithm weights based on user preferences
     if (preference === 'least_crowded') {
-      // Crowd density scales the path cost heavily
       weight = weight * crowdMultiplier * 2;
     } else if (preference === 'wheelchair') {
-      // Wheelchair accessibility constraint
+
       if (!edge.isAccessible) {
-        return Infinity; // Completely exclude stairs/inaccessible paths
+        return Infinity;
       }
     } else if (preference === 'family') {
-      // Family preference - slightly penalize stairs and high crowd edges
+
       if (!edge.isAccessible) {
-        weight = weight * 1.5; // Strollers prefer elevator/ramps but can take stairs in pinch
+        weight = weight * 1.5;
       }
       weight = weight * crowdMultiplier;
     } else {
-      // Default: fastest
       weight = weight * crowdMultiplier;
     }
 
     return weight;
   };
 
-  // Populate graph adjacency list (undirected graph representation)
   STADIUM_EDGES.forEach(edge => {
     const w = getDynamicWeight(edge);
     if (w !== Infinity) {
@@ -113,7 +95,7 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
     }
   });
 
-  // 2. Perform Dijkstra's Algorithm
+
   const distances = {};
   const previous = {};
   const queue = new Set();
@@ -126,7 +108,6 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
   distances[startNodeId] = 0;
 
   while (queue.size > 0) {
-    // Find node with minimum distance
     let minNode = null;
     queue.forEach(nodeId => {
       if (minNode === null || distances[nodeId] < distances[minNode]) {
@@ -135,16 +116,15 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
     });
 
     if (minNode === null || distances[minNode] === Infinity) {
-      break; // Destination is unreachable
+      break;
     }
 
     if (minNode === endNodeId) {
-      break; // Found shortest path
+      break;
     }
 
     queue.delete(minNode);
 
-    // Update neighbors
     const neighbors = graph[minNode] || [];
     neighbors.forEach(neighbor => {
       if (queue.has(neighbor.node)) {
@@ -157,7 +137,6 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
     });
   }
 
-  // 3. Reconstruct path
   const path = [];
   let curr = endNodeId;
   while (curr !== null) {
@@ -172,7 +151,6 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
     };
   }
 
-  // 4. Generate dynamic, grounded explanation/reasoning
   let totalDistance = 0;
   let hasStairs = false;
   let highCrowdAreas = [];
@@ -180,9 +158,8 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
   for (let i = 0; i < path.length - 1; i++) {
     const from = path[i];
     const to = path[i + 1];
-    
-    // Find original edge info
-    const edge = STADIUM_EDGES.find(e => 
+
+    const edge = STADIUM_EDGES.find(e =>
       (e.from === from && e.to === to) || (e.from === to && e.to === from)
     );
 
@@ -190,7 +167,6 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
       totalDistance += edge.distance;
       if (!edge.isAccessible) hasStairs = true;
 
-      // Find any live warnings on these segments
       activeAlerts.forEach(alert => {
         if (alert.target === from || alert.target === to) {
           if (!highCrowdAreas.includes(alert.target)) {
@@ -201,7 +177,6 @@ export function calculateRoute(startNodeId, endNodeId, preference = 'fastest', a
     }
   }
 
-  // Formulate explanation details
   let reason = "This route follows verified walkways.";
   if (preference === 'wheelchair') {
     reason = "Optimized for wheelchair accessibility. This path bypasses all staircases by routing exclusively through corridors with ramps or elevators.";

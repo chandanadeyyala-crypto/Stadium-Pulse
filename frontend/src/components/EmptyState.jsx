@@ -1,4 +1,3 @@
-import React from 'react';
 import { HelpCircle } from 'lucide-react';
 
 export default function EmptyState({ title = 'No Data Found', message = 'There are no active records in this section right now.', icon: Icon = HelpCircle }) {

@@ -10,18 +10,13 @@ import { useTranslation } from '../utils/useTranslation';
 import 'leaflet/dist/leaflet.css';
 import {
   Navigation,
-  MapPin,
   Settings,
   AlertTriangle,
-  HelpCircle,
   Loader2,
-  Undo
 } from 'lucide-react';
 
-// Center MetLife Stadium coordinates
 const STADIUM_CENTER = [40.8135, -74.0743];
 
-// Graph node coordinates mapping for rendering on Leaflet
 const NODE_COORDINATES = {
   "Gate A": [40.8145, -74.0750],
   "Gate B": [40.8125, -74.0755],
@@ -42,7 +37,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: '/leaflet/marker-shadow.png',
 });
 
-// Custom SVG Leaflet Icons to avoid Vite path errors and provide beautiful dark-themed indicators
 const createCustomIcon = (color, char) => {
   return L.divIcon({
     html: `<div style="background-color: ${color}; color: white; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.4);">${char}</div>`,
@@ -60,7 +54,6 @@ const ICONS = {
   corridor: createCustomIcon('#7f8c8d', 'C')
 };
 
-// Map helper to center the map when route changes
 function MapRecenter({ coords }) {
   const map = useMap();
   useEffect(() => {
@@ -76,7 +69,6 @@ export default function SmartNavigationPage() {
   const { routePreference } = useAccessibility();
   const { t } = useTranslation();
 
-  // Route calculation selections
   const [start, setStart] = useState(locationState.startNode || 'Gate B');
   const [end, setEnd] = useState(locationState.destinationNode || 'Section 214');
   const [preference, setPreference] = useState(locationState.prefOverride || routePreference);
@@ -86,7 +78,6 @@ export default function SmartNavigationPage() {
   const [error, setError] = useState('');
   const [alerts, setAlerts] = useState([]);
 
-  // Fetch active alerts on mount to warn about crowded nodes
   useEffect(() => {
     const loadAlerts = async () => {
       try {
@@ -100,7 +91,6 @@ export default function SmartNavigationPage() {
     loadAlerts();
   }, []);
 
-  // Compute route
   const handleCalculateRoute = async () => {
     if (start === end) {
       setError(t('Start and destination nodes cannot be identical.'));
@@ -139,12 +129,10 @@ export default function SmartNavigationPage() {
     }
   };
 
-  // Run route recommendation on initial load if route target is supplied
   useEffect(() => {
     handleCalculateRoute();
   }, [start, end, preference]);
 
-  // Map coordinates list for drawing the path Polyline
   const routePolylineCoords = routeData?.path
     ? routeData.path.map(node => NODE_COORDINATES[node.id]).filter(Boolean)
     : [];

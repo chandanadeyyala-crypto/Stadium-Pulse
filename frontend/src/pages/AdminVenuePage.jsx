@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Database, DoorOpen, Grid3X3, MapPin, Bus, Upload, Download, Plus, Trash2, CheckCircle, ArrowRight, Navigation, Edit3, Users, AlertTriangle } from 'lucide-react';
 
-// Demo verified venue data — clearly labelled
 const DEMO_GATES = [
   { id: 'gate_a', name: 'Gate A', type: 'gate', description: 'North main gate, close to parking lot A', accessible: true, status: 'open' },
   { id: 'gate_b', name: 'Gate B', type: 'gate', description: 'South secondary gate, close to rideshare zone', accessible: true, status: 'crowded' },
@@ -18,14 +17,12 @@ const DEMO_TRANSPORT = [
   { id: 'metro_3', name: 'Metro Exit 3', type: 'transit', description: 'Direct access to local rapid transit link' },
 ];
 
-// Demo verified sections — matches the graph node for Section 214
 const DEMO_SECTIONS = [
   { id: 'sec_214', name: 'Section 214', tier: 'Upper Tier', capacity: 3200, occupied: 2870, accessible: true, accessPoints: ['Concourse East (ramp)', 'Concourse West (stairs)'] },
   { id: 'sec_112', name: 'Section 112', tier: 'Lower Tier', capacity: 4800, occupied: 4100, accessible: true, accessPoints: ['Concourse West (stairs)', 'Gate A corridor'] },
   { id: 'sec_320', name: 'Section 320', tier: 'Premium Suite', capacity: 480, occupied: 310, accessible: true, accessPoints: ['VIP Elevator E2', 'Concourse East (ramp)'] },
 ];
 
-// Demo verified route edges — mirrors backend routeEngine.js STADIUM_EDGES
 const DEMO_EDGES = [
   { id: 'e1', from: 'Gate A', to: 'Concourse West', distance: 100, isAccessible: true, baseCrowd: 1.0 },
   { id: 'e2', from: 'Gate B', to: 'Concourse West', distance: 120, isAccessible: true, baseCrowd: 1.2 },
@@ -84,7 +81,6 @@ export default function AdminVenuePage() {
   const handleDeleteGate = (id) => setGates(prev => prev.filter(g => g.id !== id));
   const toggleAccessible = (id) => setGates(prev => prev.map(g => g.id === id ? { ...g, accessible: !g.accessible } : g));
 
-  // Sections handlers
   const handleAddSection = () => {
     if (!newSectionName.trim()) return;
     setSections(prev => [...prev, {
@@ -101,7 +97,6 @@ export default function AdminVenuePage() {
   const handleDeleteSection = (id) => setSections(prev => prev.filter(s => s.id !== id));
   const toggleSectionAccessible = (id) => setSections(prev => prev.map(s => s.id === id ? { ...s, accessible: !s.accessible } : s));
 
-  // Edge handlers
   const handleAddEdge = () => {
     if (newEdgeFrom === newEdgeTo) return;
     const dist = parseInt(newEdgeDist, 10);
@@ -118,7 +113,6 @@ export default function AdminVenuePage() {
   const handleDeleteEdge = (id) => setEdges(prev => prev.filter(e => e.id !== id));
   const toggleEdgeAccessible = (id) => setEdges(prev => prev.map(e => e.id === id ? { ...e, isAccessible: !e.isAccessible } : e));
 
-  // Transport handlers
   const handleAddTransport = () => {
     if (!newTransportName.trim()) return;
     setTransport(prev => [...prev, {

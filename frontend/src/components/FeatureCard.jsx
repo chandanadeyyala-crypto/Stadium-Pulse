@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function FeatureCard({ title, description, icon: Icon, colorClass = 'text-electricBlue' }) {
   return (
     <div className="glass-panel p-5 rounded-2xl border border-slate-800 glass-panel-hover flex flex-col space-y-3">

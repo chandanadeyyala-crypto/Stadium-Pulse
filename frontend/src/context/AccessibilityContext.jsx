@@ -1,23 +1,19 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AccessibilityContext = createContext();
 
 export function AccessibilityProvider({ children }) {
-  // Theme & Layout Preferences
   const [highContrast, setHighContrast] = useState(() => localStorage.getItem('accessibility_high_contrast') === 'true');
   const [textScale, setTextScale] = useState(() => localStorage.getItem('accessibility_text_scale') || 'normal'); // normal, large, extra
   const [speechEnabled, setSpeechEnabled] = useState(() => localStorage.getItem('accessibility_speech_enabled') === 'true');
-  
-  // Navigation & Routing Preferences
+
   const [routePreference, setRoutePreference] = useState(() => localStorage.getItem('accessibility_route_preference') || 'fastest'); // fastest, least_crowded, wheelchair, family
   const [language, setLanguage] = useState(() => localStorage.getItem('accessibility_language') || 'English');
   const [theme, setTheme] = useState(() => localStorage.getItem('accessibility_theme') || 'dark'); // light, dark
 
-  // Apply contrast & text scaling on boot/change
   useEffect(() => {
     const root = document.documentElement;
-    
-    // 1. Apply High Contrast
+
     if (highContrast) {
       root.classList.add('high-contrast');
     } else {
@@ -25,7 +21,6 @@ export function AccessibilityProvider({ children }) {
     }
     localStorage.setItem('accessibility_high_contrast', highContrast);
 
-    // 2. Apply Text Scaling
     root.classList.remove('large-text', 'large-text-extra');
     if (textScale === 'large') {
       root.classList.add('large-text');
@@ -33,25 +28,21 @@ export function AccessibilityProvider({ children }) {
       root.classList.add('large-text-extra');
     }
     localStorage.setItem('accessibility_text_scale', textScale);
-    
-    // 3. Apply Theme
+
     root.classList.remove('theme-light', 'theme-dark');
     root.classList.add(`theme-${theme}`);
     localStorage.setItem('accessibility_theme', theme);
-    
-    // Save other settings
+
     localStorage.setItem('accessibility_speech_enabled', speechEnabled);
     localStorage.setItem('accessibility_route_preference', routePreference);
     localStorage.setItem('accessibility_language', language);
   }, [highContrast, textScale, speechEnabled, routePreference, language, theme]);
 
-  // Voice synthesis helpers (TTS)
   const speakText = (text) => {
     if (!speechEnabled || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel(); // Stop any active reading
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Attempt language mapping
+
     const langMap = {
       English: 'en-US',
       Spanish: 'es-ES',

@@ -3,7 +3,6 @@
 @import "tailwindcss";
 
 :root {
-  /* Dark Theme Variables (Default) */
   --bg-primary: #060b13;
   --bg-surface: rgba(14, 26, 45, 0.7);
   --bg-card: rgba(16, 29, 50, 0.55);
@@ -27,7 +26,6 @@
 }
 
 .theme-light {
-  /* Light Theme Variables */
   --bg-primary: #f1f5f9;
   --bg-surface: rgba(255, 255, 255, 0.85);
   --bg-card: rgba(255, 255, 255, 0.7);
@@ -50,7 +48,6 @@
   --color-accessibility-accent: #0d9488;
 }
 
-/* Base styles */
 @layer base {
   body {
     background-color: var(--bg-primary);
@@ -70,7 +67,6 @@
   }
 }
 
-/* Accessibility - Font Size Scaling */
 html.large-text {
   font-size: 115%;
 }
@@ -79,7 +75,6 @@ html.large-text-extra {
   font-size: 130%;
 }
 
-/* Accessibility - High Contrast Mode Override */
 html.high-contrast {
   --bg-primary: #000000 !important;
   --bg-surface: #111111 !important;
@@ -110,7 +105,6 @@ html.high-contrast .bg-slate-950 {
   color: #ffffff !important;
 }
 
-/* Operations Tactical Cards (Glassmorphism & Accents) */
 .operations-card,
 .glass-panel {
   background: var(--bg-card);
@@ -143,7 +137,6 @@ html.high-contrast .bg-slate-950 {
   background-size: 26px 26px;
 }
 
-/* Feature specific accent highlights */
 .accent-navigation::before {
   background: var(--color-nav-accent);
 }
@@ -164,7 +157,6 @@ html.high-contrast .bg-slate-950 {
   background: var(--color-accessibility-accent);
 }
 
-/* Accent card glows */
 .accent-navigation {
   box-shadow: 0 0 15px -5px rgba(0, 229, 255, 0.15);
 }
@@ -185,7 +177,6 @@ html.high-contrast .bg-slate-950 {
   box-shadow: 0 0 15px -5px rgba(20, 184, 166, 0.15);
 }
 
-/* Hover effects */
 .operations-card:hover,
 .glass-panel:hover {
   transform: translateY(-2px);
@@ -199,7 +190,6 @@ html.high-contrast .bg-slate-950 {
   box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Adapt standard container backgrounds dynamically */
 .bg-stadiumNavy,
 .bg-slate-950,
 .bg-slate-900 {
@@ -219,7 +209,6 @@ html.high-contrast .bg-slate-950 {
   color: var(--text-secondary) !important;
 }
 
-/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -238,28 +227,26 @@ html.high-contrast .bg-slate-950 {
   background: var(--bg-electric);
 }
 
-/* Mobile Layout — Targeted Fixes */
 @media (max-width: 767px) {
 
-  /* Ensure body doesn't overflow horizontally */
+
   body {
     overflow-x: hidden;
   }
 
-  /* Allow cards to stretch full-width on mobile */
+
   .operations-card,
   .glass-panel {
     width: 100%;
     max-width: 100%;
   }
 
-  /* Prevent Navbar from overflowing */
   nav {
     overflow-x: hidden;
   }
 }
 
-/* ── Soccer Ball Animation Scene ──────────────────────────────────── */
+
 .ball-scene-container {
   position: relative;
   width: 280px;

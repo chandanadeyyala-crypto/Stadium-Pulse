@@ -24,7 +24,6 @@ if (!isDemo) {
         projectId: process.env.FIREBASE_PROJECT_ID
       };
 
-      // Only load cert credential if details exist and look like a real private key cert
       if (process.env.FIREBASE_CLIENT_EMAIL && privateKey && privateKey.includes('PRIVATE KEY')) {
         config.credential = admin.credential.cert({
           projectId: process.env.FIREBASE_PROJECT_ID,

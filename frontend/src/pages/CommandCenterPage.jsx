@@ -4,14 +4,13 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import StatusBadge from '../components/StatusBadge';
 import LoadingState from '../components/LoadingState';
-import { 
-  Cpu, 
-  Activity, 
-  Database, 
-  Map, 
-  BellRing, 
-  Users, 
-  CheckCircle, 
+import {
+  Cpu,
+  Activity,
+  Map,
+  BellRing,
+  Users,
+  CheckCircle,
   XCircle,
   Wifi,
   WifiOff
@@ -218,7 +217,7 @@ export default function CommandCenterPage() {
                   <p className="text-xs font-bold text-white">{s.name}</p>
                   <p className="text-[10px] text-slate-400 font-medium" dangerouslySetInnerHTML={{ __html: s.zone }} />
                 </div>
-                {s.status === 'active' 
+                {s.status === 'active'
                   ? <CheckCircle size={14} className="text-pitchGreen" />
                   : <XCircle size={14} className="text-slate-600" />
                 }

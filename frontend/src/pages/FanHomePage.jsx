@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
@@ -8,14 +8,10 @@ import AlertCard from '../components/AlertCard';
 import {
   Calendar,
   MapPin,
-  Compass,
-  AlertTriangle,
   Accessibility,
   Bus,
   Loader2,
-  Navigation,
-  UtensilsCrossed,
-  CupSoda
+  Navigation
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -27,7 +23,6 @@ export default function FanHomePage() {
   const [loadingAlerts, setLoadingAlerts] = useState(true);
   const navigate = useNavigate();
 
-  // Load live alerts from backend
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
@@ -35,7 +30,6 @@ export default function FanHomePage() {
         const response = await axios.get(`${backendUrl}/api/alerts`, { timeout: 3000 });
         setAlerts(response.data.slice(0, 2));
       } catch (err) {
-        // Keep previous alerts on error
       } finally {
         setLoadingAlerts(false);
       }

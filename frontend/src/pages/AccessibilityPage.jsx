@@ -1,11 +1,10 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccessibility } from '../context/AccessibilityContext';
 import AccessibilityToggle from '../components/AccessibilityToggle';
-import { 
-  Accessibility, 
-  MapPin, 
-  PhoneCall, 
+import {
+  Accessibility,
+  MapPin,
+  PhoneCall,
   ShieldAlert,
   ChevronRight
 } from 'lucide-react';
@@ -17,17 +16,17 @@ export default function AccessibilityPage() {
     speechEnabled, setSpeechEnabled,
     routePreference, setRoutePreference
   } = useAccessibility();
-  
+
   const navigate = useNavigate();
 
   const handleRouteToFacility = (facilityId) => {
     // Navigate to map with wheelchair preference set and target set to the facility
-    navigate('/smart-navigation', { 
-      state: { 
+    navigate('/smart-navigation', {
+      state: {
         startNode: 'Gate B', // Simulation starting point
-        destinationNode: facilityId, 
-        prefOverride: 'wheelchair' 
-      } 
+        destinationNode: facilityId,
+        prefOverride: 'wheelchair'
+      }
     });
   };
 
@@ -39,7 +38,7 @@ export default function AccessibilityPage() {
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-12">
-      
+
       {/* Page Header */}
       <div className="flex items-center space-x-2.5">
         <Accessibility className="text-electricBlue" />
@@ -77,11 +76,10 @@ export default function AccessibilityPage() {
               <button
                 key={scale.id}
                 onClick={() => setTextScale(scale.id)}
-                className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${
-                  textScale === scale.id
+                className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all ${textScale === scale.id
                     ? 'bg-electricBlue border-electricBlue text-white'
                     : 'bg-stadiumNavy border-slate-800 text-slate-400 hover:text-slate-200'
-                }`}
+                  }`}
               >
                 {scale.name}
               </button>
@@ -107,11 +105,10 @@ export default function AccessibilityPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
             onClick={() => setRoutePreference('wheelchair')}
-            className={`p-4 rounded-2xl border text-left flex flex-col space-y-2 transition-all ${
-              routePreference === 'wheelchair'
+            className={`p-4 rounded-2xl border text-left flex flex-col space-y-2 transition-all ${routePreference === 'wheelchair'
                 ? 'bg-emerald-500/10 border-pitchGreen text-white'
                 : 'bg-stadiumNavy/40 border-slate-800 text-slate-400 hover:text-slate-200'
-            }`}
+              }`}
           >
             <span className="text-lg">♿</span>
             <h4 className="text-xs font-extrabold text-white uppercase">Wheelchair Accessible</h4>
@@ -120,11 +117,10 @@ export default function AccessibilityPage() {
 
           <button
             onClick={() => setRoutePreference('least_crowded')}
-            className={`p-4 rounded-2xl border text-left flex flex-col space-y-2 transition-all ${
-              routePreference === 'least_crowded'
+            className={`p-4 rounded-2xl border text-left flex flex-col space-y-2 transition-all ${routePreference === 'least_crowded'
                 ? 'bg-amber-500/10 border-alertAmber text-white'
                 : 'bg-stadiumNavy/40 border-slate-800 text-slate-400 hover:text-slate-200'
-            }`}
+              }`}
           >
             <span className="text-lg">🔥</span>
             <h4 className="text-xs font-extrabold text-white uppercase">Avoid Congestion</h4>
@@ -136,7 +132,7 @@ export default function AccessibilityPage() {
       {/* Nearest Facilities Locator Cards */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Nearest Verified Accessible Facilities</h3>
-        
+
         <div className="space-y-2">
           {facilities.map((fac) => (
             <button
@@ -168,7 +164,7 @@ export default function AccessibilityPage() {
           <h4 className="text-xs font-bold text-white">Require Emergency Physical Help?</h4>
           <p className="text-[10px] text-slate-400 font-semibold">Press to dispatch a stadium assistance volunteer to your ticket seat position.</p>
         </div>
-        
+
         <a
           href="tel:112"
           className="px-4 py-2 bg-criticalRed hover:bg-red-600 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 shadow-lg shrink-0"

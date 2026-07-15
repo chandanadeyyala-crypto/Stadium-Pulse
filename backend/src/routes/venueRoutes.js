@@ -3,7 +3,7 @@ import { venueDataService } from '../services/venueDataService.js';
 
 const router = express.Router();
 
-// GET /api/venue - Full layout
+
 router.get('/', (req, res) => {
   try {
     const venue = venueDataService.getVenueData();
@@ -13,7 +13,6 @@ router.get('/', (req, res) => {
   }
 });
 
-// GET /api/venue/gates - Retrieve verified entrances
 router.get('/gates', (req, res) => {
   try {
     const gates = venueDataService.getGates();
@@ -23,7 +22,7 @@ router.get('/gates', (req, res) => {
   }
 });
 
-// GET /api/venue/facilities - Retrieve restrooms, medical desks, elevators
+
 router.get('/facilities', (req, res) => {
   try {
     const facilities = venueDataService.getFacilities();
@@ -33,7 +32,6 @@ router.get('/facilities', (req, res) => {
   }
 });
 
-// GET /api/venue/routes - Retrieve graph routes
 router.get('/routes', (req, res) => {
   try {
     const routes = venueDataService.getRoutes();

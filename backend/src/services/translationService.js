@@ -8,10 +8,9 @@ import { cacheService } from './cacheService.js';
  */
 export async function translateText(text, targetLang) {
   if (!text || !targetLang || targetLang.toLowerCase() === 'en' || targetLang.toLowerCase() === 'english') {
-    return text; // Return text as is for empty, missing, or English conversions if original is English
+    return text;
   }
 
-  // Check cache first
   const cachedTranslation = cacheService.getTranslation(text, targetLang);
   if (cachedTranslation) {
     console.log(`[Cache Hit] Serving cached translation for: "${text.substring(0, 20)}..." to ${targetLang}`);
@@ -29,7 +28,7 @@ Text to translate:
   try {
     console.log(`[Translate API] Calling Gemini for translation to: ${targetLang}`);
     const translation = await callGemini(prompt, '', systemInstruction);
-    const cleaned = translation.replace(/^["']|["']$/g, '').trim(); // Strip quotes
+    const cleaned = translation.replace(/^["']|["']$/g, '').trim();
     cacheService.setTranslation(text, targetLang, cleaned);
     return cleaned;
   } catch (geminiError) {
@@ -44,7 +43,7 @@ Text to translate:
     } catch (groqError) {
       console.warn('All translation APIs failed. Returning original text. Error:', groqError.message);
 
-      // Return a simulated mock translation if keys are missing (so translations works in full demo mode)
+
       const simulatedTranslations = {
         es: {
           "Gate B (South Entrance) is experiencing heavy crowd inflow. Security queues are approximately 30 minutes. Consider using Gate D.": "La Puerta B (Entrada Sur) está experimentando una gran afluencia de público. Las colas de seguridad son de aproximadamente 30 minutos. Considere usar la Puerta D.",
@@ -63,7 +62,6 @@ Text to translate:
         return simulatedTranslations[langCode][text];
       }
 
-      // Default translation fallback
       return `[Translated to ${targetLang}] ${text}`;
     }
   }

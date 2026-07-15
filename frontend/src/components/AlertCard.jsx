@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
 import { useAccessibility } from '../context/AccessibilityContext';
-import { 
-  Volume2, 
-  VolumeX, 
-  Languages, 
-  MapPin, 
+import {
+  Volume2,
+  MapPin,
   Loader2,
   Users,
   DoorOpen,
@@ -48,15 +46,15 @@ export default function AlertCard({ alert, onTranslate }) {
     setLoadingTranslation(true);
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const token = localStorage.getItem('stadiumpulse_user') 
-        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token 
+      const token = localStorage.getItem('stadiumpulse_user')
+        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token
         : '';
 
       const response = await axios.post(`${backendUrl}/api/ai/translate`, {
         text: alert.message,
         targetLang: langName
       }, {
-        headers: { 
+        headers: {
           'Authorization': `Bearer ${token}`,
           'x-demo-role': 'fan'
         }
@@ -106,13 +104,12 @@ export default function AlertCard({ alert, onTranslate }) {
   };
 
   return (
-    <div className={`p-4 rounded-xl border glass-panel transition-all ${
-      alert.severity === 'critical' 
-        ? 'border-red-500/30 bg-red-950/10' 
-        : alert.severity === 'warning'
+    <div className={`p-4 rounded-xl border glass-panel transition-all ${alert.severity === 'critical'
+      ? 'border-red-500/30 bg-red-950/10'
+      : alert.severity === 'warning'
         ? 'border-amber-500/20 bg-amber-950/5'
         : 'border-slate-800'
-    }`}>
+      }`}>
       {/* Alert Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
@@ -122,12 +119,10 @@ export default function AlertCard({ alert, onTranslate }) {
           </span>
           {(alert.severity === 'critical' || alert.severity === 'warning') && (
             <span className="flex h-2 w-2 relative">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'
-              }`}></span>
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${
-                alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'
-              }`}></span>
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'
+                }`}></span>
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${alert.severity === 'critical' ? 'bg-red-500' : 'bg-amber-500'
+                }`}></span>
             </span>
           )}
         </div>

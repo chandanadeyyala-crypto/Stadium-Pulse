@@ -1,4 +1,3 @@
-import React from 'react';
 import { Landmark } from 'lucide-react';
 
 export default function SourceBadge({ source }) {

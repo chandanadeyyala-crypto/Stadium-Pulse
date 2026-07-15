@@ -98,8 +98,8 @@ export default function SettingsPage() {
               key={role}
               onClick={() => signInAsDemoRole(role)}
               className={`px-3 py-1.5 border rounded-lg text-xs font-semibold capitalize transition-all ${user?.role === role
-                  ? 'bg-electricBlue/20 border-electricBlue text-white font-bold'
-                  : 'bg-stadiumNavy border-slate-800 text-slate-400 hover:text-white'
+                ? 'bg-electricBlue/20 border-electricBlue text-white font-bold'
+                : 'bg-stadiumNavy border-slate-800 text-slate-400 hover:text-white'
                 }`}
             >
               Switch to {role}
@@ -151,7 +151,7 @@ export default function SettingsPage() {
             description={pref.desc}
             checked={notifications[pref.id]}
             onChange={(v) => {
-              if (pref.id === 'emergency') return; // Cannot disable emergency alerts
+              if (pref.id === 'emergency') return;
               setNotifications(prev => ({ ...prev, [pref.id]: v }));
             }}
           />

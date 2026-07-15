@@ -1,7 +1,6 @@
 import { STADIUM_NODES, STADIUM_EDGES } from './routeEngine.js';
 import { db } from '../config/firebaseAdmin.js';
 
-// Local store representing active operational statuses and lists
 let activeAlerts = [
   {
     id: "alert_1",
@@ -31,7 +30,7 @@ let reportedIncidents = [
     location: "Gate B",
     description: "Crowd density has increased rapidly due to the arrival of shuttle buses.",
     reportedBy: "volunteer_demo",
-    status: "approved", // approved incidents are committed to activeAlerts
+    status: "approved",
     timestamp: new Date(Date.now() - 1000 * 60 * 6).toISOString()
   }
 ];
@@ -62,7 +61,6 @@ export const venueDataService = {
   async getAlerts() {
     if (db) {
       try {
-        // Race Firestore against a 2 s timeout — fall back to memory if slow
         const firestoreQuery = db.collection('alerts').orderBy('timestamp', 'desc').get();
         const timeout = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Firestore timeout')), 2000)
@@ -76,7 +74,7 @@ export const venueDataService = {
           return alerts;
         }
       } catch (err) {
-        // Fall through to in-memory store
+
       }
     }
     return activeAlerts;
@@ -105,8 +103,7 @@ export const venueDataService = {
         if (doc.exists) {
           await docRef.update({ approved: true });
           const updated = { id: doc.id, ...doc.data(), approved: true };
-          
-          // Also verify parent incident if applicable
+
           if (updated.incidentId) {
             try {
               await db.collection('incidents').doc(updated.incidentId).update({ status: 'approved' });
@@ -174,7 +171,6 @@ export const venueDataService = {
     const contextSegments = [];
     const question = normalizedQuestion.toLowerCase();
 
-    // 1. Check for specific venue nodes (gates, restrooms, medical desk, transit)
     Object.values(STADIUM_NODES).forEach(node => {
       const nodeKeywords = [
         node.id.toLowerCase(),
@@ -182,8 +178,7 @@ export const venueDataService = {
         ...(node.description ? [node.description.toLowerCase()] : [])
       ];
 
-      // Match nodes
-      const isMatch = nodeKeywords.some(keyword => question.includes(keyword) || 
+      const isMatch = nodeKeywords.some(keyword => question.includes(keyword) ||
         (node.type === 'gate' && keyword.includes('gate') && question.includes(node.id.split(' ')[1]?.toLowerCase())) ||
         (node.type === 'facility' && keyword.includes('restroom') && question.includes('restroom')) ||
         (node.type === 'facility' && keyword.includes('medical') && (question.includes('medical') || question.includes('doctor') || question.includes('first aid')))
@@ -194,21 +189,18 @@ export const venueDataService = {
       }
     });
 
-    // 2. Attach active alerts affecting those nodes
     const alerts = await this.getAlerts();
     alerts.forEach(alert => {
       if (alert.approved) {
-        // If alert matches search keywords
         const alertText = alert.message.toLowerCase() + " " + (alert.target || "").toLowerCase();
         const matchesAlert = alertText.split(' ').some(word => word.length > 2 && question.includes(word));
-        
+
         if (matchesAlert || question.includes('alert') || question.includes('warning') || question.includes('closed') || question.includes('crowded')) {
           contextSegments.push(`[Live Alert] Severity: ${alert.severity}. Target: ${alert.target || 'General'}. Status: ${alert.message}`);
         }
       }
     });
 
-    // 3. Fallback: if they ask generic gate info, provide all gates
     if (question.includes('gate') && !contextSegments.some(c => c.includes('Gate'))) {
       const gates = Object.values(STADIUM_NODES).filter(n => n.type === 'gate');
       gates.forEach(g => {

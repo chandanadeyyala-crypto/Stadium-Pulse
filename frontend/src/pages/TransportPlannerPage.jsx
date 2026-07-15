@@ -1,12 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import StatusBadge from '../components/StatusBadge';
-import { 
-  Bus, 
-  MapPin, 
-  Leaf, 
+import {
+  Bus,
+  Leaf,
   ArrowRight,
-  TrendingDown,
   Navigation
 } from 'lucide-react';
 
@@ -21,18 +19,18 @@ export default function TransportPlannerPage() {
   ];
 
   const handleRouteToExit = (destId) => {
-    navigate('/smart-navigation', { 
-      state: { 
-        startNode: 'Section 214', // Match seat location
-        destinationNode: destId, 
-        prefOverride: 'least_crowded' 
-      } 
+    navigate('/smart-navigation', {
+      state: {
+        startNode: 'Section 214',
+        destinationNode: destId,
+        prefOverride: 'least_crowded'
+      }
     });
   };
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto pb-12">
-      
+
       {/* Page Header */}
       <div className="flex items-center space-x-2.5">
         <Bus className="text-pitchGreen" />
@@ -45,7 +43,7 @@ export default function TransportPlannerPage() {
       {/* Nearest Exit coordinates Card */}
       <div className="operations-card accent-transport p-5 space-y-3">
         <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Your Recommended Egress Point</span>
-        
+
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <h3 className="text-xl font-black text-white">Metro Exit 3 Transit Hub</h3>
@@ -96,10 +94,10 @@ export default function TransportPlannerPage() {
       {/* Transit Options Directory */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Transit Choices</h3>
-        
+
         <div className="space-y-3">
           {transportOptions.map((opt, idx) => (
-            <div 
+            <div
               key={idx}
               className="p-4 rounded-2xl bg-stadiumNavy border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:border-slate-700/60 transition-all"
             >

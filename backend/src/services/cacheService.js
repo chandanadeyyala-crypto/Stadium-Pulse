@@ -1,6 +1,6 @@
 import { db } from '../config/firebaseAdmin.js';
 
-// In-memory cache structures
+
 const queryCache = new Map();
 const translationCache = new Map();
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import SourceBadge from './SourceBadge';
 import {
   Bot,
@@ -12,11 +11,7 @@ export default function AIMessage({ message }) {
   const isBot = message.sender === 'bot';
   const text = message.text || '';
 
-  // Function to parse the structured AI response format:
-  // Answer: ...
-  // Source: ...
-  // Reason: ...
-  // Action: ...
+
   const parseStructuredResponse = (content) => {
     const parts = {
       answer: '',
@@ -30,15 +25,14 @@ export default function AIMessage({ message }) {
     const reasonIdx = content.indexOf('Reason:');
     const actionIdx = content.indexOf('Action:');
 
-    // If parsing headers are not found, return text as default answer
     if (answerIdx === -1 && sourceIdx === -1 && reasonIdx === -1 && actionIdx === -1) {
       parts.answer = content;
       return parts;
     }
 
-    // Helper to slice text safely
+
     const getSlice = (startPos, nextPos) => {
-      const start = startPos + 7; // Length of header like "Answer:"
+      const start = startPos + 7;
       const end = nextPos === -1 ? content.length : nextPos;
       return content.substring(start, end).trim();
     };
@@ -77,10 +71,10 @@ export default function AIMessage({ message }) {
 
       {/* Message Box */}
       <div className={`p-4 rounded-2xl max-w-[85%] sm:max-w-[75%] border shadow-md space-y-3 ${isBot
-          ? isDataMissing
-            ? 'bg-red-500/10 border-red-500/30 text-slate-200'
-            : 'bg-stadiumNavy/75 border-slate-700/60 text-slate-200'
-          : 'bg-electricBlue text-white border-electricBlue'
+        ? isDataMissing
+          ? 'bg-red-500/10 border-red-500/30 text-slate-200'
+          : 'bg-stadiumNavy/75 border-slate-700/60 text-slate-200'
+        : 'bg-electricBlue text-white border-electricBlue'
         }`}>
         {!isBot ? (
           /* User Message Text */

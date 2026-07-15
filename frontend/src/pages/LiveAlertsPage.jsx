@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import AlertCard from '../components/AlertCard';
 import LoadingState from '../components/LoadingState';
 import EmptyState from '../components/EmptyState';
-import { 
-  BellRing, 
-  RefreshCw, 
-  Filter, 
-  Flame, 
-  Bus, 
-  Accessibility, 
-  AlertTriangle,
+import {
+  BellRing,
+  RefreshCw,
+  Filter,
   Radio
 } from 'lucide-react';
 
@@ -36,8 +32,7 @@ export default function LiveAlertsPage() {
 
   useEffect(() => {
     fetchAlerts();
-    
-    // Refresh alerts automatically every 10 seconds
+
     const interval = setInterval(fetchAlerts, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -57,16 +52,15 @@ export default function LiveAlertsPage() {
     return (a.type || '').toLowerCase() === filter.toLowerCase();
   });
 
-  // Severity groups in priority order for grouped display
   const severityGroups = [
     { key: 'critical', label: 'Critical', icon: '🚨', borderClass: 'border-l-4 border-criticalRed', headerBg: 'bg-red-500/10 border-red-500/30', textColor: 'text-criticalRed' },
-    { key: 'warning',  label: 'Warning',  icon: '⚠️',  borderClass: 'border-l-4 border-alertAmber', headerBg: 'bg-amber-500/10 border-amber-500/30', textColor: 'text-alertAmber' },
-    { key: 'info',     label: 'Info',     icon: 'ℹ️',  borderClass: 'border-l-4 border-electricBlue', headerBg: 'bg-blue-500/10 border-blue-500/30', textColor: 'text-electricBlue' },
+    { key: 'warning', label: 'Warning', icon: '⚠️', borderClass: 'border-l-4 border-alertAmber', headerBg: 'bg-amber-500/10 border-amber-500/30', textColor: 'text-alertAmber' },
+    { key: 'info', label: 'Info', icon: 'ℹ️', borderClass: 'border-l-4 border-electricBlue', headerBg: 'bg-blue-500/10 border-blue-500/30', textColor: 'text-electricBlue' },
   ];
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto pb-12">
-      
+
       {/* Alerts Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -91,7 +85,7 @@ export default function LiveAlertsPage() {
             <p className="text-[10px] uppercase font-semibold text-slate-400">Matchday Broadcast announcements</p>
           </div>
         </div>
-        
+
         <button
           onClick={() => fetchAlerts(true)}
           disabled={refreshing || loading}
@@ -123,11 +117,10 @@ export default function LiveAlertsPage() {
             <button
               key={cat.id}
               onClick={() => setFilter(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                filter === cat.id
-                  ? 'bg-electricBlue text-white shadow-md'
-                  : 'bg-stadiumNavy text-slate-400 border border-slate-800 hover:text-slate-200'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === cat.id
+                ? 'bg-electricBlue text-white shadow-md'
+                : 'bg-stadiumNavy text-slate-400 border border-slate-800 hover:text-slate-200'
+                }`}
             >
               {cat.label}
             </button>
@@ -166,8 +159,8 @@ export default function LiveAlertsPage() {
           })}
         </div>
       ) : (
-        <EmptyState 
-          title="All Clear!" 
+        <EmptyState
+          title="All Clear!"
           message={`There are no active ${filter === 'all' ? '' : `'${filter}'`} operational warnings currently active in the arena.`}
           icon={BellRing}
         />

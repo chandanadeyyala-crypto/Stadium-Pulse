@@ -2,20 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
 import axios from 'axios';
 
-// ─── Global shared state ────────────────────────────────────────────────────
-// Module-level translation cache — shared across every hook instance
 const translationCache = {};
-// Set of text strings currently being fetched — avoids duplicate requests
 const pendingRequests = new Set();
 
 const localTranslations = {
   Spanish: {
-    // ── Core UI ───────────────────────────────────────────────────
     "Stadium": "Estadio", "Intelligence": "Inteligencia",
     "Sign In": "Iniciar sesión", "Explore Demo": "Explorar Demo",
     "or": "o", "Back": "Atrás",
     "Fan": "Aficionado", "Staff": "Personal", "Organizer": "Organizador",
-    // ── Landing Page ─────────────────────────────────────────────
     "Verified navigation": "Navegación verificada",
     "Multilingual alerts": "Alertas multilingües",
     "Crowd-aware routing": "Ruta inteligente",
@@ -30,7 +25,6 @@ const localTranslations = {
     "© FIFA World Cup 2026 Operations Prototype. Sandbox mode.": "© Prototipo FIFA 2026. Modo sandbox.",
     "Smart Routing": "Ruta inteligente", "AI Translation": "Traducción IA",
     "Accessibility": "Accesibilidad", "Verified Assistance": "Anti-alucinación",
-    // ── Login Page ───────────────────────────────────────────────
     "Email Address": "Correo electrónico", "Password": "Contraseña",
     "Sign In with Email": "Iniciar sesión con correo",
     "Sign In with Google": "Iniciar sesión con Google",

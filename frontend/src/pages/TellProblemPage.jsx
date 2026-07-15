@@ -3,22 +3,16 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
-import { 
-  Mic, 
-  MicOff, 
-  Languages, 
-  Trash2, 
-  Check, 
+import {
+  Mic,
+  MicOff,
+  Trash2,
+  Check,
   AlertCircle,
-  HelpCircle,
-  FileText,
   Volume2,
-  ShieldAlert,
   Loader2,
-  Send,
   Sliders,
-  Settings,
-  ArrowRight
+  Settings
 } from 'lucide-react';
 
 export default function TellProblemPage() {
@@ -26,9 +20,8 @@ export default function TellProblemPage() {
   const { stopSpeaking } = useAccessibility();
   const { t } = useTranslation();
 
-  const userRole = user?.role || 'fan'; // fan, volunteer, staff, organizer
+  const userRole = user?.role || 'fan';
 
-  // Accessibility/speech settings
   const [inputLang, setInputLang] = useState('Spanish');
   const [inputText, setInputText] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -36,20 +29,18 @@ export default function TellProblemPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // AI analysis results (extracted details)
   const [analysis, setAnalysis] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
   const recognitionRef = useRef(null);
 
-  // Setup Web Speech API for voice input
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const rec = new SpeechRecognition();
       rec.continuous = false;
       rec.interimResults = false;
-      
+
       const langMap = {
         English: 'en-US',
         Spanish: 'es-ES',
@@ -89,7 +80,6 @@ export default function TellProblemPage() {
     }
   }, [inputLang]);
 
-  // Clean up speech on unmount
   useEffect(() => {
     return () => {
       stopSpeaking();
@@ -165,7 +155,6 @@ export default function TellProblemPage() {
 
     try {
       if (userRole === 'fan') {
-        // Submit Fan Complaint
         await axios.post(`${backendUrl}/api/reports/fan`, {
           text: analysis.englishTranslation || inputText,
           category: analysis.category || 'other',
@@ -176,7 +165,6 @@ export default function TellProblemPage() {
         });
         setSuccessMessage('Your complaint has been logged and dispatched to stadium operations.');
       } else if (userRole === 'volunteer' || userRole === 'staff') {
-        // Submit Staff Update
         await axios.post(`${backendUrl}/api/reports`, {
           text: analysis.details || analysis.englishTranslation || inputText,
           category: analysis.category || 'other',
@@ -187,7 +175,6 @@ export default function TellProblemPage() {
         });
         setSuccessMessage('Field status update registered in the operational incident register.');
       } else if (userRole === 'organizer') {
-        // Broadcast Organizer Alert Directly
         await axios.post(`${backendUrl}/api/alerts`, {
           type: analysis.category || 'other',
           severity: analysis.severity || 'info',
@@ -199,7 +186,6 @@ export default function TellProblemPage() {
         setSuccessMessage('Critical operations warning published and broadcast to all matchday interfaces.');
       }
 
-      // Clear input on success
       setInputText('');
       setAnalysis(null);
     } catch (err) {
@@ -220,7 +206,6 @@ export default function TellProblemPage() {
     }
   };
 
-  // Get accent styles for role
   const getRoleAccentClass = () => {
     if (userRole === 'organizer') return 'accent-safety border-red-500/20';
     if (userRole === 'volunteer' || userRole === 'staff') return 'accent-ai border-purple-500/20';
@@ -248,7 +233,7 @@ export default function TellProblemPage() {
 
       {/* Main Form Split */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-start">
-        
+
         {/* Left Card: Input Panel */}
         <div className={`operations-card ${getRoleAccentClass()} p-6 space-y-4`}>
           <div className="flex items-center justify-between border-b border-white/5 pb-2">
@@ -296,11 +281,11 @@ export default function TellProblemPage() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={
-                userRole === 'fan' 
-                  ? t("Type or dictate: e.g. 'restroom R2 on Section 214 has no water'...") 
-                  : userRole === 'organizer' 
-                  ? t("Type or dictate: e.g. 'Broadcast to Gate B fans to enter via Gate D due to queues'...")
-                  : t("Type or dictate: e.g. 'Gate B queue is 30 minutes. Direct volunteers to assist'...")
+                userRole === 'fan'
+                  ? t("Type or dictate: e.g. 'restroom R2 on Section 214 has no water'...")
+                  : userRole === 'organizer'
+                    ? t("Type or dictate: e.g. 'Broadcast to Gate B fans to enter via Gate D due to queues'...")
+                    : t("Type or dictate: e.g. 'Gate B queue is 30 minutes. Direct volunteers to assist'...")
               }
               className="w-full h-40 bg-black/20 border border-slate-700/70 rounded-2xl p-4 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400/80 outline-none font-medium resize-none transition-all"
             />
@@ -318,11 +303,10 @@ export default function TellProblemPage() {
               <button
                 type="button"
                 onClick={handleMicToggle}
-                className={`p-3 rounded-xl border flex items-center justify-center cursor-pointer transition-all ${
-                  isListening 
-                    ? 'bg-red-500 border-red-500 text-white animate-pulse shadow-lg' 
-                    : 'bg-stadiumNavy border-slate-700 text-slate-300 hover:text-white hover:border-slate-500'
-                }`}
+                className={`p-3 rounded-xl border flex items-center justify-center cursor-pointer transition-all ${isListening
+                  ? 'bg-red-500 border-red-500 text-white animate-pulse shadow-lg'
+                  : 'bg-stadiumNavy border-slate-700 text-slate-300 hover:text-white hover:border-slate-500'
+                  }`}
                 title={isListening ? t('Stop Recording') : t('Speak in selected language')}
               >
                 {isListening ? <MicOff size={16} /> : <Mic size={16} />}
@@ -400,7 +384,7 @@ export default function TellProblemPage() {
 
                 {/* Role Specific Structured Form Fields */}
                 <div className="grid grid-cols-2 gap-3">
-                  
+
                   {/* Category Field */}
                   {userRole !== 'organizer' && (
                     <div className="flex flex-col space-y-1">
@@ -482,7 +466,7 @@ export default function TellProblemPage() {
                   <textarea
                     value={analysis.actionableInstruction || analysis.details || analysis.cleanedDescription || ''}
                     onChange={(e) => handleFieldChange(
-                      userRole === 'organizer' ? 'actionableInstruction' : userRole === 'volunteer' || userRole === 'staff' ? 'details' : 'cleanedDescription', 
+                      userRole === 'organizer' ? 'actionableInstruction' : userRole === 'volunteer' || userRole === 'staff' ? 'details' : 'cleanedDescription',
                       e.target.value
                     )}
                     className="w-full h-18 bg-stadiumNavy border border-slate-800/85 rounded-xl p-2 text-xs text-slate-300 outline-none font-semibold resize-none focus:border-cyan-400"
