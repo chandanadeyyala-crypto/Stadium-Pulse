@@ -14,7 +14,8 @@ import {
   Navigation,
   Utensils,
   Droplet,
-  Activity
+  Stethoscope,
+  BookMarked
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -173,22 +174,22 @@ export default function FanHomePage() {
       {/* Quick Actions */}
       <div className="space-y-2">
         <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">{t("Quick Actions")}</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
           {[
-            { icon: MapPin, label: t("Find My Seat"), dest: 'Section 214', pref: routePreference },
-            { icon: Utensils, label: t("Food & Drinks"), path: '/food-drinks' },
-            { icon: Droplet, label: t("Water Stations"), path: '/food-drinks', state: { category: 'Water stations' } },
-            { icon: Accessibility, label: t("Accessible Toilet"), dest: 'Restroom R2', pref: 'wheelchair' },
-            { icon: Activity, label: t("Medical Help"), dest: 'Medical Desk', pref: routePreference },
-            { icon: Bus, label: t("Transport Exit"), dest: 'Metro Exit 3', pref: 'least_crowded' },
+            { icon: BookMarked, label: t("Find My Seat"), dest: 'Section 214', pref: routePreference, color: 'text-electricBlue' },
+            { icon: Utensils, label: t("Food & Drinks"), path: '/food-drinks', color: 'text-alertAmber' },
+            { icon: Droplet, label: t("Water Stations"), path: '/food-drinks', state: { category: 'Water stations' }, color: 'text-sky-400' },
+            { icon: Accessibility, label: t("Accessible Restroom"), dest: 'Restroom R2', pref: 'wheelchair', color: 'text-indigo-400' },
+            { icon: Stethoscope, label: t("Medical Help"), dest: 'Medical Desk', pref: routePreference, color: 'text-criticalRed' },
+            { icon: Bus, label: t("Transport Exit"), dest: 'Metro Exit 3', pref: 'least_crowded', color: 'text-pitchGreen' },
           ].map((action, i) => (
             <button
               key={i}
               onClick={() => handleQuickAction(action)}
-              className="p-3 md:p-4 bg-stadiumNavy/60 border border-slate-800 hover:border-electricBlue/60 rounded-xl text-center flex flex-col items-center justify-center space-y-1.5 transition-all hover:scale-[1.02] cursor-pointer active:scale-95"
+              className="p-3 md:p-4 bg-stadiumNavy/60 border border-slate-800 hover:border-electricBlue/40 rounded-xl text-center flex flex-col items-center justify-center space-y-1.5 transition-all hover:scale-[1.03] hover:bg-stadiumNavy cursor-pointer active:scale-95 group"
             >
-              <action.icon size={18} className="text-electricBlue flex-shrink-0" />
-              <span className="text-[11px] md:text-xs font-bold text-white block leading-tight">{action.label}</span>
+              <action.icon size={20} className={`${action.color} flex-shrink-0 transition-transform group-hover:scale-110`} />
+              <span className="text-[10px] md:text-[11px] font-bold text-slate-300 group-hover:text-white block leading-tight">{action.label}</span>
             </button>
           ))}
         </div>

@@ -1,12 +1,20 @@
+import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../utils/useTranslation';
 import { ShieldCheck, Navigation, Languages, Accessibility } from 'lucide-react';
 import soccerBall from '../assets/soccer-ball.svg';
+import { healthCheck } from '../utils/api';
+
 export default function LandingPage() {
   const navigate = useNavigate();
   const { signInAsDemoRole } = useAuth();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    // Silently call GET /health to wake Render backend cold start
+    healthCheck().catch(() => {});
+  }, []);
 
   const handleDemoMode = (role) => {
     signInAsDemoRole(role);

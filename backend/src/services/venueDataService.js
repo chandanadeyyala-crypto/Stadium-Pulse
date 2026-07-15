@@ -38,7 +38,7 @@ let reportedIncidents = [
 export const venueDataService = {
   getVenueData() {
     return {
-      name: "StadiumPulse AI Arena (FIFA 2026 Prototype)",
+      name: "StadiumPulse AI Arena — FIFA World Cup 2026",
       location: "East Rutherford, NJ, USA",
       capacity: 82500,
       nodes: STADIUM_NODES,

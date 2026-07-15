@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
@@ -8,24 +8,27 @@ import { ArrowLeft } from 'lucide-react';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import FanHomePage from './pages/FanHomePage';
-import AIAssistantPage from './pages/AIAssistantPage';
-import SmartNavigationPage from './pages/SmartNavigationPage';
 import LiveAlertsPage from './pages/LiveAlertsPage';
 import AccessibilityPage from './pages/AccessibilityPage';
 import TransportPlannerPage from './pages/TransportPlannerPage';
-import FoodDrinksPage from './pages/FoodDrinksPage';
-import StaffDashboardPage from './pages/StaffDashboardPage';
 import StaffReportPage from './pages/StaffReportPage';
 import AlertApprovalPage from './pages/AlertApprovalPage';
-import CommandCenterPage from './pages/CommandCenterPage';
 import AdminVenuePage from './pages/AdminVenuePage';
 import SettingsPage from './pages/SettingsPage';
 import TellProblemPage from './pages/TellProblemPage';
+
+// Lazy loaded pages
+const AIAssistantPage = lazy(() => import('./pages/AIAssistantPage'));
+const SmartNavigationPage = lazy(() => import('./pages/SmartNavigationPage'));
+const FoodDrinksPage = lazy(() => import('./pages/FoodDrinksPage'));
+const StaffDashboardPage = lazy(() => import('./pages/StaffDashboardPage'));
+const CommandCenterPage = lazy(() => import('./pages/CommandCenterPage'));
 
 // Layout Components
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
+import LoadingState from './components/LoadingState';
 
 // Route guard
 function ProtectedRoute({ children, allowedRoles = [] }) {
@@ -110,38 +113,40 @@ function AppShell() {
               </button>
             </div>
           )}
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
+          <Suspense fallback={<LoadingState />}>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Protected query page */}
-            <Route path="/tell-problem" element={<ProtectedRoute><TellProblemPage /></ProtectedRoute>} />
+              {/* Protected query page */}
+              <Route path="/tell-problem" element={<ProtectedRoute><TellProblemPage /></ProtectedRoute>} />
 
-            {/* Fan-only routes */}
-            <Route path="/fan-home" element={<ProtectedRoute allowedRoles={['fan']}><FanHomePage /></ProtectedRoute>} />
-            <Route path="/smart-navigation" element={<ProtectedRoute allowedRoles={['fan']}><SmartNavigationPage /></ProtectedRoute>} />
-            <Route path="/ai-assistant" element={<ProtectedRoute allowedRoles={['fan']}><AIAssistantPage /></ProtectedRoute>} />
-            <Route path="/live-alerts" element={<ProtectedRoute allowedRoles={['fan']}><LiveAlertsPage /></ProtectedRoute>} />
-            <Route path="/accessibility" element={<ProtectedRoute allowedRoles={['fan']}><AccessibilityPage /></ProtectedRoute>} />
-            <Route path="/transport-exit" element={<ProtectedRoute allowedRoles={['fan']}><TransportPlannerPage /></ProtectedRoute>} />
-            <Route path="/food-drinks" element={<ProtectedRoute allowedRoles={['fan']}><FoodDrinksPage /></ProtectedRoute>} />
+              {/* Fan-only routes */}
+              <Route path="/fan-home" element={<ProtectedRoute allowedRoles={['fan']}><FanHomePage /></ProtectedRoute>} />
+              <Route path="/smart-navigation" element={<ProtectedRoute allowedRoles={['fan']}><SmartNavigationPage /></ProtectedRoute>} />
+              <Route path="/ai-assistant" element={<ProtectedRoute allowedRoles={['fan']}><AIAssistantPage /></ProtectedRoute>} />
+              <Route path="/live-alerts" element={<ProtectedRoute allowedRoles={['fan']}><LiveAlertsPage /></ProtectedRoute>} />
+              <Route path="/accessibility" element={<ProtectedRoute allowedRoles={['fan']}><AccessibilityPage /></ProtectedRoute>} />
+              <Route path="/transport-exit" element={<ProtectedRoute allowedRoles={['fan']}><TransportPlannerPage /></ProtectedRoute>} />
+              <Route path="/food-drinks" element={<ProtectedRoute allowedRoles={['fan']}><FoodDrinksPage /></ProtectedRoute>} />
 
-            {/* Staff / Volunteer routes */}
-            <Route path="/staff-dashboard" element={<ProtectedRoute allowedRoles={['volunteer', 'staff', 'organizer']}><StaffDashboardPage /></ProtectedRoute>} />
-            <Route path="/staff-report" element={<ProtectedRoute allowedRoles={['volunteer', 'staff', 'organizer']}><StaffReportPage /></ProtectedRoute>} />
-            <Route path="/alert-approval" element={<ProtectedRoute allowedRoles={['staff', 'organizer']}><AlertApprovalPage /></ProtectedRoute>} />
-            <Route path="/organizer-command" element={<ProtectedRoute allowedRoles={['organizer']}><CommandCenterPage /></ProtectedRoute>} />
-            <Route path="/admin-venue" element={<ProtectedRoute allowedRoles={['organizer']}><AdminVenuePage /></ProtectedRoute>} />
+              {/* Staff / Volunteer routes */}
+              <Route path="/staff-dashboard" element={<ProtectedRoute allowedRoles={['volunteer', 'staff', 'organizer']}><StaffDashboardPage /></ProtectedRoute>} />
+              <Route path="/staff-report" element={<ProtectedRoute allowedRoles={['volunteer', 'staff', 'organizer']}><StaffReportPage /></ProtectedRoute>} />
+              <Route path="/alert-approval" element={<ProtectedRoute allowedRoles={['staff', 'organizer']}><AlertApprovalPage /></ProtectedRoute>} />
+              <Route path="/organizer-command" element={<ProtectedRoute allowedRoles={['organizer']}><CommandCenterPage /></ProtectedRoute>} />
+              <Route path="/admin-venue" element={<ProtectedRoute allowedRoles={['organizer']}><AdminVenuePage /></ProtectedRoute>} />
 
-            {/* Shared authenticated route */}
-            <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+              {/* Shared authenticated route */}
+              <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
 
-            {/* Catch-all */}
-            <Route path="*" element={
-              <Navigate to={user ? (isStaff ? '/staff-dashboard' : '/fan-home') : '/'} replace />
-            } />
-          </Routes>
+              {/* Catch-all */}
+              <Route path="*" element={
+                <Navigate to={user ? (isStaff ? '/staff-dashboard' : '/fan-home') : '/'} replace />
+              } />
+            </Routes>
+          </Suspense>
         </main>
       </div>
 

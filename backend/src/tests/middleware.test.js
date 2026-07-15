@@ -134,3 +134,116 @@ describe('requireRole', () => {
     expect(res._status).toBe(401);
   });
 });
+
+// ─── verifyAuthToken — x-demo-role header fallback ───────────────────────────
+describe('verifyAuthToken: DEMO_MODE env flag bypass', () => {
+  let verifyAuthToken;
+
+  beforeAll(async () => {
+    jest.unstable_mockModule('../config/firebaseAdmin.js', () => ({
+      admin: { auth: () => ({ verifyIdToken: jest.fn() }) },
+      db: null,
+      firebaseApp: null,
+    }));
+    process.env.DEMO_MODE = 'true';
+    ({ verifyAuthToken } = await import('../middleware/authMiddleware.js'));
+  });
+
+  test('accepts any request in DEMO_MODE, using x-demo-role header for role', async () => {
+    const req = { headers: { 'x-demo-role': 'organizer' }, user: undefined };
+    const res = {
+      _status: null,
+      _json: null,
+      status(code) { this._status = code; return this; },
+      json(data)   { this._json  = data; return this; },
+    };
+    const next = jest.fn();
+    await verifyAuthToken(req, res, next);
+    expect(next).toHaveBeenCalled();
+    expect(req.user.role).toBe('organizer');
+  });
+
+  test('defaults to fan role when x-demo-role header is absent in DEMO_MODE', async () => {
+    const req = { headers: {}, user: undefined };
+    const res = {
+      _status: null,
+      _json: null,
+      status(code) { this._status = code; return this; },
+      json(data)   { this._json  = data; return this; },
+    };
+    const next = jest.fn();
+    await verifyAuthToken(req, res, next);
+    expect(next).toHaveBeenCalled();
+    expect(req.user.role).toBe('fan');
+  });
+});
+
+// ─── verifyAuthToken — JWT fallback payload parser branch ─────────────────────
+describe('verifyAuthToken: Google token fallback payload parser', () => {
+  let verifyAuthToken;
+
+  function makeBase64JwtWith(payload) {
+    const encoded = Buffer.from(JSON.stringify(payload)).toString('base64');
+    return `header.${encoded}.signature`;
+  }
+
+  beforeAll(async () => {
+    jest.unstable_mockModule('../config/firebaseAdmin.js', () => ({
+      admin: {
+        auth: () => ({
+          verifyIdToken: jest.fn().mockRejectedValue(new Error('Firebase verify failed'))
+        })
+      },
+      db: null,
+      firebaseApp: null,
+    }));
+    process.env.DEMO_MODE = 'false';
+    ({ verifyAuthToken } = await import('../middleware/authMiddleware.js'));
+  });
+
+  test('falls back to payload parser for a staff email domain', async () => {
+    const token = makeBase64JwtWith({
+      sub: 'uid_test_staff',
+      email: 'operator@stadiumpulse.com',
+      name: 'Venue Operator',
+      email_verified: true
+    });
+
+    const { req, res, next } = makeReqRes({ authorization: `Bearer ${token}` });
+    await verifyAuthToken(req, res, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(req.user.role).toBe('staff');
+    expect(req.user.email).toBe('operator@stadiumpulse.com');
+  });
+
+  test('falls back to payload parser and assigns organizer for admin email domain', async () => {
+    const token = makeBase64JwtWith({
+      sub: 'uid_test_organizer',
+      email: 'director@stadiumpulse-admin.com',
+      name: 'Event Director',
+      email_verified: true
+    });
+
+    const { req, res, next } = makeReqRes({ authorization: `Bearer ${token}` });
+    await verifyAuthToken(req, res, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(req.user.role).toBe('organizer');
+  });
+
+  test('falls back to fan role for an unrecognized email domain', async () => {
+    const token = makeBase64JwtWith({
+      sub: 'uid_test_fan',
+      email: 'spectator@gmail.com',
+      email_verified: true
+    });
+
+    const { req, res, next } = makeReqRes({ authorization: `Bearer ${token}` });
+    await verifyAuthToken(req, res, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(req.user.role).toBe('fan');
+  });
+});
+

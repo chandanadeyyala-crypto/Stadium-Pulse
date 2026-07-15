@@ -76,7 +76,6 @@ export async function verifyAuthToken(req, res, next) {
           email_verified: !!decodedPayload.email_verified
         };
 
-        console.log('AuthMiddleware: Decoded Google token via fallback payload parser:', req.user.email);
         return next();
       }
     } catch (fallbackErr) {
