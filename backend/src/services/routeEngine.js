@@ -8,7 +8,11 @@ export const STADIUM_NODES = {
   "Medical Desk": { id: "Medical Desk", name: "Medical Desk East", type: "facility", description: "First Aid & Medical assistance, Concourse level" },
   "Metro Exit 3": { id: "Metro Exit 3", name: "Metro Exit 3 (Transit Hub)", type: "transit", description: "Direct access to local rapid transit link" },
   "Concourse East": { id: "Concourse East", name: "Concourse East Corridor", type: "corridor", description: "Main eastern thoroughfare with ramps/elevators" },
-  "Concourse West": { id: "Concourse West", name: "Concourse West Corridor", type: "corridor", description: "Main western thoroughfare containing stairs" }
+  "Concourse West": { id: "Concourse West", name: "Concourse West Corridor", type: "corridor", description: "Main western thoroughfare containing stairs" },
+  "Food Court": { id: "Food Court", name: "Food Court (West Concourse)", type: "facility", description: "Main food court with diverse dining options", category: "Meals", zone: "Concourse West", accessibility: "Wheelchair Accessible", dietary: ["Vegetarian", "Vegan", "Halal"], status: "open", lastUpdated: "5 minutes ago" },
+  "Water Station": { id: "Water Station", name: "Water Station (North Concourse)", type: "facility", description: "Free chilled drinking water refill point", category: "Water stations", zone: "Concourse West", accessibility: "Wheelchair Accessible", dietary: [], status: "open", lastUpdated: "2 minutes ago" },
+  "Beverage Point": { id: "Beverage Point", name: "Beverage Point (East Concourse)", type: "facility", description: "Soft drinks, beer, and snacks counter", category: "Beverages", zone: "Concourse East", accessibility: "Wheelchair Accessible", dietary: [], status: "open", lastUpdated: "10 minutes ago" },
+  "Coffee Counter": { id: "Coffee Counter", name: "Coffee Counter (South Concourse)", type: "facility", description: "Fresh espresso and pastries", category: "Coffee", zone: "Concourse East", accessibility: "Wheelchair Accessible", dietary: ["Vegetarian", "Vegan"], status: "open", lastUpdated: "4 minutes ago" }
 };
 
 
@@ -22,7 +26,11 @@ export const STADIUM_EDGES = [
   { from: "Concourse East", to: "Medical Desk", distance: 60, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
   { from: "Gate A", to: "Metro Exit 3", distance: 300, isAccessible: true, baseCrowd: 1.3, isBlocked: false },
   { from: "Gate B", to: "Metro Exit 3", distance: 250, isAccessible: true, baseCrowd: 1.8, isBlocked: false },
-  { from: "Gate D", to: "Metro Exit 3", distance: 400, isAccessible: true, baseCrowd: 1.1, isBlocked: false }
+  { from: "Gate D", to: "Metro Exit 3", distance: 400, isAccessible: true, baseCrowd: 1.1, isBlocked: false },
+  { from: "Concourse West", to: "Food Court", distance: 40, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
+  { from: "Concourse West", to: "Water Station", distance: 30, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
+  { from: "Concourse East", to: "Beverage Point", distance: 50, isAccessible: true, baseCrowd: 1.0, isBlocked: false },
+  { from: "Concourse East", to: "Coffee Counter", distance: 70, isAccessible: true, baseCrowd: 1.0, isBlocked: false }
 ];
 
 /*

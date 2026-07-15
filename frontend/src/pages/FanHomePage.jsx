@@ -11,7 +11,10 @@ import {
   Accessibility,
   Bus,
   Loader2,
-  Navigation
+  Navigation,
+  Utensils,
+  Droplet,
+  Activity
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -39,10 +42,35 @@ export default function FanHomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleQuickAction = (dest, pref) => {
-    navigate('/smart-navigation', {
-      state: { startNode: 'Gate B', destinationNode: dest, prefOverride: pref }
-    });
+  const getGreeting = () => {
+    const isGuestOrDemo = !user || user.isDemo || user.uid?.startsWith('demo_user_') || user.uid === 'google_demo_user';
+    const rawName = user?.displayName || '';
+    const name = rawName.trim();
+    
+    const invalidNames = ['demo', 'google', 'anonymous', 'user', 'fan', 'staff', 'organizer', 'volunteer'];
+    const isInvalidName = invalidNames.some(inv => name.toLowerCase().includes(inv));
+    
+    if (isGuestOrDemo || !name || isInvalidName) {
+      return {
+        title: t("Matchday Hub"),
+        subtitle: t("Your routes, venue services and operational updates in one place.")
+      };
+    }
+    
+    return {
+      title: `${t("Welcome,")} ${name.split(' ')[0]}`,
+      subtitle: t("Live matchday guidance — verified from stadium operations.")
+    };
+  };
+
+  const handleQuickAction = (action) => {
+    if (action.path) {
+      navigate(action.path, { state: action.state });
+    } else {
+      navigate('/smart-navigation', {
+        state: { startNode: 'Gate B', destinationNode: action.dest, prefOverride: action.pref }
+      });
+    }
   };
 
   return (
@@ -52,10 +80,10 @@ export default function FanHomePage() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-stadiumNavy/40 border border-slate-800 rounded-2xl">
         <div>
           <h2 className="text-base md:text-xl font-bold text-white">
-            {t("Welcome to the")} {user?.displayName?.split(' ')[0] || t(' 🎉')}
+            {getGreeting().title}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5 hidden sm:block">
-            {t("Live matchday guidance — verified from stadium operations.")}
+          <p className="text-xs text-slate-400 mt-0.5">
+            {getGreeting().subtitle}
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -145,19 +173,21 @@ export default function FanHomePage() {
       {/* Quick Actions */}
       <div className="space-y-2">
         <h3 className="text-xs font-extrabold text-white uppercase tracking-wider">{t("Quick Actions")}</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
           {[
-            { emoji: '🎫', label: t("Find My Seat"), dest: 'Section 214', pref: routePreference },
-            { emoji: '♿', label: t("Accessible Toilet"), dest: 'Restroom R2', pref: 'wheelchair' },
-            { emoji: '🚨', label: t("Medical Desk"), dest: 'Medical Desk', pref: routePreference },
-            { emoji: '🚇', label: t("Transport Exit"), dest: 'Metro Exit 3', pref: 'least_crowded' },
+            { icon: MapPin, label: t("Find My Seat"), dest: 'Section 214', pref: routePreference },
+            { icon: Utensils, label: t("Food & Drinks"), path: '/food-drinks' },
+            { icon: Droplet, label: t("Water Stations"), path: '/food-drinks', state: { category: 'Water stations' } },
+            { icon: Accessibility, label: t("Accessible Toilet"), dest: 'Restroom R2', pref: 'wheelchair' },
+            { icon: Activity, label: t("Medical Help"), dest: 'Medical Desk', pref: routePreference },
+            { icon: Bus, label: t("Transport Exit"), dest: 'Metro Exit 3', pref: 'least_crowded' },
           ].map((action, i) => (
             <button
               key={i}
-              onClick={() => handleQuickAction(action.dest, action.pref)}
-              className="p-3 md:p-4 bg-stadiumNavy/60 border border-slate-800 hover:border-electricBlue/60 rounded-xl text-center space-y-1.5 transition-all hover:scale-[1.02] cursor-pointer active:scale-95"
+              onClick={() => handleQuickAction(action)}
+              className="p-3 md:p-4 bg-stadiumNavy/60 border border-slate-800 hover:border-electricBlue/60 rounded-xl text-center flex flex-col items-center justify-center space-y-1.5 transition-all hover:scale-[1.02] cursor-pointer active:scale-95"
             >
-              <span className="text-lg md:text-xl block">{action.emoji}</span>
+              <action.icon size={18} className="text-electricBlue flex-shrink-0" />
               <span className="text-[11px] md:text-xs font-bold text-white block leading-tight">{action.label}</span>
             </button>
           ))}

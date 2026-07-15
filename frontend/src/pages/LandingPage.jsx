@@ -78,14 +78,14 @@ export default function LandingPage() {
           {/* Left side – text & CTAs */}
           <div className="flex-1 space-y-6">
             <span className="inline-block px-3 py-1 bg-blue-500/10 text-electricBlue border border-electricBlue/20 rounded-full text-[10px] font-bold uppercase tracking-widest">
-              FIFA World Cup 2026 · Operations Platform
+              StadiumPulse AI
             </span>
             <h1 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
               {t('Stadium')}<br />
               <span className="text-electricBlue">{t('Intelligence')}</span>
             </h1>
             <p className="text-sm text-slate-400 leading-relaxed max-w-md font-medium">
-              {t('AI-powered navigation, multilingual chat, and crowd-aware routing — for fans, staff and command centers.')}
+              {t('Trusted AI assistance for fans, staff and venue operations. Verified-source guidance, crowd-aware navigation, multilingual assistance, and accessibility-first matchday support.')}
             </p>
 
             {/* Two compact CTA buttons */}

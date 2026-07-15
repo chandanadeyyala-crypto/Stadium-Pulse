@@ -13,6 +13,7 @@ import SmartNavigationPage from './pages/SmartNavigationPage';
 import LiveAlertsPage from './pages/LiveAlertsPage';
 import AccessibilityPage from './pages/AccessibilityPage';
 import TransportPlannerPage from './pages/TransportPlannerPage';
+import FoodDrinksPage from './pages/FoodDrinksPage';
 import StaffDashboardPage from './pages/StaffDashboardPage';
 import StaffReportPage from './pages/StaffReportPage';
 import AlertApprovalPage from './pages/AlertApprovalPage';
@@ -124,6 +125,7 @@ function AppShell() {
             <Route path="/live-alerts" element={<ProtectedRoute allowedRoles={['fan']}><LiveAlertsPage /></ProtectedRoute>} />
             <Route path="/accessibility" element={<ProtectedRoute allowedRoles={['fan']}><AccessibilityPage /></ProtectedRoute>} />
             <Route path="/transport-exit" element={<ProtectedRoute allowedRoles={['fan']}><TransportPlannerPage /></ProtectedRoute>} />
+            <Route path="/food-drinks" element={<ProtectedRoute allowedRoles={['fan']}><FoodDrinksPage /></ProtectedRoute>} />
 
             {/* Staff / Volunteer routes */}
             <Route path="/staff-dashboard" element={<ProtectedRoute allowedRoles={['volunteer', 'staff', 'organizer']}><StaffDashboardPage /></ProtectedRoute>} />

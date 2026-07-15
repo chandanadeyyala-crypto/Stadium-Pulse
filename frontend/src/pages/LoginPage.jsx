@@ -141,13 +141,13 @@ export default function LoginPage() {
           {/* Header Title */}
           <div className="text-center space-y-2">
             <Link to="/" className="inline-flex items-center space-x-2">
-              <div className="bg-electricBlue text-white p-2 rounded-lg font-bold">🏟️</div>
+              <div className="bg-electricBlue text-white p-2 rounded-lg font-bold">✨</div>
               <span className="font-extrabold text-xl tracking-tight text-white">
                 StadiumPulse <span className="text-electricBlue">AI</span>
               </span>
             </Link>
             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-              {t("FIFA WC 2026 Authentication Gateway")}
+              {t("Access Your Matchday Workspace")}
             </p>
           </div>
 
@@ -271,7 +271,7 @@ export default function LoginPage() {
                 onClick={() => handleDemoSignIn('organizer')}
                 className="px-3 py-1.5 bg-stadiumNavy hover:bg-slate-800 border border-slate-700 rounded-lg text-xs font-semibold text-criticalRed cursor-pointer"
               >
-                {t("Continue as Organiser")}
+                {t("Continue as Organizer")}
               </button>
             </div>
           </div>

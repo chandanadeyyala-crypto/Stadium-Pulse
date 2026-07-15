@@ -24,7 +24,11 @@ const NODE_COORDINATES = {
   "Gate D": [40.8130, -74.0730],
   "Concourse East": [40.8132, -74.0738],
   "Section 214": [40.8136, -74.0746],
-  "Metro Exit 3": [40.8120, -74.0725]
+  "Metro Exit 3": [40.8120, -74.0725],
+  "Food Court": [40.8140, -74.0754],
+  "Water Station": [40.8142, -74.0748],
+  "Beverage Point": [40.8131, -74.0734],
+  "Coffee Counter": [40.8129, -74.0736]
 };
 
 const CROWD_HEAT = {

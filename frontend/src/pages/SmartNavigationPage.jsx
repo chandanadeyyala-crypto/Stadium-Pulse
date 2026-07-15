@@ -26,7 +26,11 @@ const NODE_COORDINATES = {
   "Restroom R2": [40.8134, -74.0736],
   "Medical Desk": [40.8130, -74.0740],
   "Section 214": [40.8136, -74.0746],
-  "Metro Exit 3": [40.8120, -74.0725]
+  "Metro Exit 3": [40.8120, -74.0725],
+  "Food Court": [40.8140, -74.0754],
+  "Water Station": [40.8142, -74.0748],
+  "Beverage Point": [40.8131, -74.0734],
+  "Coffee Counter": [40.8129, -74.0736]
 };
 
 delete L.Icon.Default.prototype._getIconUrl;

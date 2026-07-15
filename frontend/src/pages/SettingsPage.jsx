@@ -91,7 +91,7 @@ export default function SettingsPage() {
         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5 pb-2 border-b border-slate-800">
           <Shield size={13} /><span>Role &amp; Access</span>
         </h3>
-        <p className="text-xs text-slate-400 font-medium">Current demo role: <strong className="text-white capitalize">{user?.role}</strong></p>
+        <p className="text-xs text-slate-400 font-medium">Current session role: <strong className="text-white capitalize">{user?.role}</strong></p>
         <div className="flex flex-wrap gap-2">
           {['fan', 'volunteer', 'staff', 'organizer'].map(role => (
             <button

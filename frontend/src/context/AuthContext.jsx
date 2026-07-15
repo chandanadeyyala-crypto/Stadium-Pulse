@@ -100,7 +100,7 @@ export function AuthProvider({ children }) {
     const demoUser = {
       uid: `demo_user_${role}`,
       email: `${role}@stadiumpulse-demo.com`,
-      displayName: `Demo ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+      displayName: `${role.charAt(0).toUpperCase() + role.slice(1)} Experience`,
       role,
       token: `demo_token_for_${role}`,
       isDemo: true,
@@ -121,16 +121,8 @@ export function AuthProvider({ children }) {
       setLoading(true);
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
-      console.warn('Firebase Google Sign In failed, falling back to mock Google Sign In:', error.message);
-      const demoUser = {
-        uid: 'google_demo_user',
-        email: 'google-user@gmail.com',
-        displayName: 'User',
-        role: 'fan',
-        token: 'mock_google_token'
-      };
-      setUser(demoUser);
-      localStorage.setItem('stadiumpulse_user', JSON.stringify(demoUser));
+      console.error('Firebase Google Sign In failed:', error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
