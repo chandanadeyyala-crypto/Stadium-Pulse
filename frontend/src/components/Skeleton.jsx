@@ -6,6 +6,7 @@ export function SkeletonLine({ className = '' }) {
   );
 }
 
+
 export function AlertsSkeleton() {
   return (
     <div className="space-y-3" data-testid="alerts-skeleton">

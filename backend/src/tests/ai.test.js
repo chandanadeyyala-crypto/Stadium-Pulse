@@ -6,7 +6,8 @@
  */
 
 import { jest } from '@jest/globals';
-import request   from 'supertest';
+import request from 'supertest';
+
 
 // ─── Mock Firebase Admin ──────────────────────────────────────────────────────
 jest.unstable_mockModule('../config/firebaseAdmin.js', () => ({
@@ -18,10 +19,10 @@ jest.unstable_mockModule('../config/firebaseAdmin.js', () => ({
 // ─── Mock cacheService ────────────────────────────────────────────────────────
 jest.unstable_mockModule('../services/cacheService.js', () => ({
   cacheService: {
-    getQuery:        jest.fn().mockReturnValue(null),          // no cache hit by default
-    setQuery:        jest.fn(),
-    getTranslation:  jest.fn().mockReturnValue(null),
-    setTranslation:  jest.fn(),
+    getQuery: jest.fn().mockReturnValue(null),          // no cache hit by default
+    setQuery: jest.fn(),
+    getTranslation: jest.fn().mockReturnValue(null),
+    setTranslation: jest.fn(),
   },
 }));
 

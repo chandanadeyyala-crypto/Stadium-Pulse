@@ -6,7 +6,7 @@
  */
 
 import { jest } from '@jest/globals';
-import request   from 'supertest';
+import request from 'supertest';
 
 // ─── Mock Firebase Admin ──────────────────────────────────────────────────────
 jest.unstable_mockModule('../config/firebaseAdmin.js', () => ({
@@ -14,6 +14,7 @@ jest.unstable_mockModule('../config/firebaseAdmin.js', () => ({
   db: null,
   firebaseApp: null,
 }));
+
 
 // ─── Mock venueDataService ────────────────────────────────────────────────────
 const mockVenueData = {
@@ -27,13 +28,13 @@ const mockVenueData = {
 const mockGates = [
   { id: 'Gate A', name: 'Gate A (North Entrance)', type: 'gate', description: 'North main gate' },
   { id: 'Gate B', name: 'Gate B (South Entrance)', type: 'gate', description: 'South secondary gate' },
-  { id: 'Gate D', name: 'Gate D (East Entrance)',  type: 'gate', description: 'East VIP gate' },
+  { id: 'Gate D', name: 'Gate D (East Entrance)', type: 'gate', description: 'East VIP gate' },
 ];
 
 const mockFacilities = [
-  { id: 'Food Court',    name: 'Food Court (West Concourse)',    type: 'facility', category: 'Meals',          status: 'open',   zone: 'Concourse West', dietary: ['Vegetarian', 'Halal'] },
-  { id: 'Water Station', name: 'Water Station (North Concourse)',type: 'facility', category: 'Water stations',  status: 'open',   zone: 'Concourse West', dietary: [] },
-  { id: 'Coffee Counter',name: 'Coffee Counter (South)',         type: 'facility', category: 'Coffee',          status: 'open',   zone: 'Concourse East', dietary: ['Vegan'] },
+  { id: 'Food Court', name: 'Food Court (West Concourse)', type: 'facility', category: 'Meals', status: 'open', zone: 'Concourse West', dietary: ['Vegetarian', 'Halal'] },
+  { id: 'Water Station', name: 'Water Station (North Concourse)', type: 'facility', category: 'Water stations', status: 'open', zone: 'Concourse West', dietary: [] },
+  { id: 'Coffee Counter', name: 'Coffee Counter (South)', type: 'facility', category: 'Coffee', status: 'open', zone: 'Concourse East', dietary: ['Vegan'] },
 ];
 
 const mockRoutes = [
@@ -42,12 +43,12 @@ const mockRoutes = [
 
 jest.unstable_mockModule('../services/venueDataService.js', () => ({
   venueDataService: {
-    getVenueData:  jest.fn().mockReturnValue(mockVenueData),
-    getGates:      jest.fn().mockReturnValue([...mockGates]),
+    getVenueData: jest.fn().mockReturnValue(mockVenueData),
+    getGates: jest.fn().mockReturnValue([...mockGates]),
     getFacilities: jest.fn().mockReturnValue([...mockFacilities]),
-    getRoutes:     jest.fn().mockReturnValue([...mockRoutes]),
-    getAlerts:     jest.fn().mockResolvedValue([]),
-    getIncidents:  jest.fn().mockResolvedValue([]),
+    getRoutes: jest.fn().mockReturnValue([...mockRoutes]),
+    getAlerts: jest.fn().mockResolvedValue([]),
+    getIncidents: jest.fn().mockResolvedValue([]),
   },
 }));
 
