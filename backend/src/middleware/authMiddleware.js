@@ -3,10 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const isDemo = process.env.DEMO_MODE === 'true';
-
-
 export async function verifyAuthToken(req, res, next) {
+  const isDemo = process.env.DEMO_MODE === 'true';
   const authHeader = req.headers.authorization;
   let token = null;
   if (authHeader && authHeader.startsWith('Bearer ')) {

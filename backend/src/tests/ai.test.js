@@ -41,6 +41,8 @@ jest.unstable_mockModule('../services/aiService.js', () => ({
   askWithFallback: jest.fn().mockResolvedValue(
     'Answer: Gate A (North Entrance) is open and accessible.\nSource: Verified Stadium Database\nReason: Verified gate status.\nAction: Head to the North Entrance.'
   ),
+  callGemini: jest.fn().mockResolvedValue('Mocked Gemini Response'),
+  callGroq: jest.fn().mockResolvedValue('Mocked Groq Response'),
 }));
 
 // ─── Mock translationService ──────────────────────────────────────────────────
@@ -115,13 +117,16 @@ describe('POST /api/ai/ask — AI question answering', () => {
     const savedMode = process.env.DEMO_MODE;
     process.env.DEMO_MODE = 'false';
     const strictApp = createApp();
-    process.env.DEMO_MODE = savedMode;
 
-    const res = await request(strictApp)
-      .post('/api/ai/ask')
-      .send({ question: 'Where is Gate A?', language: 'English' });
+    try {
+      const res = await request(strictApp)
+        .post('/api/ai/ask')
+        .send({ question: 'Where is Gate A?', language: 'English' });
 
-    expect(res.status).toBe(401);
+      expect(res.status).toBe(401);
+    } finally {
+      process.env.DEMO_MODE = savedMode;
+    }
   });
 });
 
