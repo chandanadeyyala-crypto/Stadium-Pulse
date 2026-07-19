@@ -10,6 +10,11 @@ StadiumPulse AI connects verified venue information, staff reports and operation
 - **Backend API:** https://stadium-pulse-sszc.onrender.com
 - **Repository:** https://github.com/chandanadeyyala-crypto/Stadium-Pulse
 
+## 📖 Technical Blog
+
+
+- **Read the complete engineering journey here:**
+  https://medium.com/@chandanasravyasri29/how-i-built-stadiumpulse-ai-a-genai-powered-smart-stadium-operations-fan-assistance-platform-5ff201718744
 ---
 
 ## Problem Statement
