@@ -66,6 +66,7 @@ export default function FoodDrinksPage() {
   const fetchFacilities = useCallback(async () => {
     try {
       setLoading(true);
+      setError('');
       const res = await getFacilities();
       const foodDrinkCategories = [
         'Meals', 'Snacks', 'Vegetarian', 'Vegan', 'Halal',

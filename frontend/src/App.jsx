@@ -31,7 +31,7 @@ import BottomNav from './components/BottomNav';
 import LoadingState from './components/LoadingState';
 
 // Route guard
-function ProtectedRoute({ children, allowedRoles = [] }) {
+export function ProtectedRoute({ children, allowedRoles = [] }) {
   const { user, loading } = useAuth();
 
   if (loading) {
