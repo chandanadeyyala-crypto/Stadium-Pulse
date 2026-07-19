@@ -178,7 +178,7 @@ export default function FanHomePage() {
           {[
             { icon: BookMarked, label: t("Find My Seat"), dest: 'Section 214', pref: routePreference, color: 'text-electricBlue' },
             { icon: Utensils, label: t("Food & Drinks"), path: '/food-drinks', color: 'text-alertAmber' },
-            { icon: Droplet, label: t("Water Stations"), path: '/food-drinks', state: { category: 'Water stations' }, color: 'text-sky-400' },
+            { icon: Droplet, label: t("Water Stations"), path: '/water-stations', color: 'text-sky-400' },
             { icon: Accessibility, label: t("Accessible Restroom"), dest: 'Restroom R2', pref: 'wheelchair', color: 'text-indigo-400' },
             { icon: Stethoscope, label: t("Medical Help"), dest: 'Medical Desk', pref: routePreference, color: 'text-criticalRed' },
             { icon: Bus, label: t("Transport Exit"), dest: 'Metro Exit 3', pref: 'least_crowded', color: 'text-pitchGreen' },

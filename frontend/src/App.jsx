@@ -4,23 +4,24 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import { ArrowLeft } from 'lucide-react';
 
-// Pages
+// Eager pages — kept small, appear immediately
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
-import FanHomePage from './pages/FanHomePage';
-import LiveAlertsPage from './pages/LiveAlertsPage';
-import AccessibilityPage from './pages/AccessibilityPage';
-import TransportPlannerPage from './pages/TransportPlannerPage';
-import StaffReportPage from './pages/StaffReportPage';
-import AlertApprovalPage from './pages/AlertApprovalPage';
-import AdminVenuePage from './pages/AdminVenuePage';
-import SettingsPage from './pages/SettingsPage';
-import TellProblemPage from './pages/TellProblemPage';
 
-// Lazy loaded pages
+// Lazy-loaded pages — split into separate JS chunks
+const FanHomePage = lazy(() => import('./pages/FanHomePage'));
+const LiveAlertsPage = lazy(() => import('./pages/LiveAlertsPage'));
+const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'));
+const TransportPlannerPage = lazy(() => import('./pages/TransportPlannerPage'));
+const StaffReportPage = lazy(() => import('./pages/StaffReportPage'));
+const AlertApprovalPage = lazy(() => import('./pages/AlertApprovalPage'));
+const AdminVenuePage = lazy(() => import('./pages/AdminVenuePage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const TellProblemPage = lazy(() => import('./pages/TellProblemPage'));
 const AIAssistantPage = lazy(() => import('./pages/AIAssistantPage'));
 const SmartNavigationPage = lazy(() => import('./pages/SmartNavigationPage'));
 const FoodDrinksPage = lazy(() => import('./pages/FoodDrinksPage'));
+const WaterStationsPage = lazy(() => import('./pages/WaterStationsPage'));
 const StaffDashboardPage = lazy(() => import('./pages/StaffDashboardPage'));
 const CommandCenterPage = lazy(() => import('./pages/CommandCenterPage'));
 
@@ -130,6 +131,7 @@ function AppShell() {
               <Route path="/accessibility" element={<ProtectedRoute allowedRoles={['fan']}><AccessibilityPage /></ProtectedRoute>} />
               <Route path="/transport-exit" element={<ProtectedRoute allowedRoles={['fan']}><TransportPlannerPage /></ProtectedRoute>} />
               <Route path="/food-drinks" element={<ProtectedRoute allowedRoles={['fan']}><FoodDrinksPage /></ProtectedRoute>} />
+              <Route path="/water-stations" element={<ProtectedRoute allowedRoles={['fan']}><WaterStationsPage /></ProtectedRoute>} />
 
               {/* Staff / Volunteer routes */}
               <Route path="/staff-dashboard" element={<ProtectedRoute allowedRoles={['volunteer', 'staff', 'organizer']}><StaffDashboardPage /></ProtectedRoute>} />
