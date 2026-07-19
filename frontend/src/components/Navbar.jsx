@@ -93,10 +93,7 @@ export default function Navbar({ showHamburger = false, onHamburgerClick }) {
           )}
 
           {/* Brand */}
-          <div className="flex items-center space-x-2 select-none min-w-0">
-            <div className="bg-electricBlue text-white p-1.5 md:p-2 rounded-lg font-bold flex items-center justify-center flex-shrink-0 text-sm md:text-base">
-              🏟️
-            </div>
+          <div className="flex items-center select-none min-w-0">
             <span className="font-extrabold text-base md:text-xl tracking-tight text-white truncate">
               Stadium<span className="text-electricBlue">Pulse</span>
             </span>

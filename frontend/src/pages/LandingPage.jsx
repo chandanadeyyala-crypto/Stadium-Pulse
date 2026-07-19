@@ -56,8 +56,7 @@ export default function LandingPage() {
 
       {/* ── Sticky top bar ─────────────────────────────────────────────── */}
       <header className="px-6 py-3 flex justify-between items-center border-b border-slate-800 bg-stadiumNavy/20 sticky top-0 backdrop-blur-md z-50">
-        <div className="flex items-center space-x-2 select-none">
-          <div className="bg-electricBlue text-white p-1.5 rounded-lg font-bold text-sm">🏟️</div>
+        <div className="flex items-center select-none">
           <span className="font-extrabold text-lg tracking-tight text-white">
             StadiumPulse <span className="text-electricBlue">AI</span>
           </span>

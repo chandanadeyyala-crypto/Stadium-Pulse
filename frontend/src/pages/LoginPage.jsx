@@ -55,8 +55,7 @@ export default function LoginPage() {
 
         <div className="z-10 flex flex-col items-center space-y-8 max-w-xs">
           {/* StadiumPulse AI branding */}
-          <div className="flex items-center space-x-2">
-            <div className="bg-electricBlue text-white p-2 rounded-lg font-bold">🏟️</div>
+          <div className="flex items-center">
             <span className="font-extrabold text-2xl tracking-tight text-white">
               StadiumPulse <span className="text-electricBlue">AI</span>
             </span>
