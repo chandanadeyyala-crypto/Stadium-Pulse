@@ -36,9 +36,13 @@ export function ProtectedRoute({ children, allowedRoles = [] }) {
   const { user, loading } = useAuth();
 
   if (loading) {
+    // Compact inline placeholder — does NOT block the full viewport.
+    // Public routes (Landing, Login) never reach this guard.
     return (
-      <div className="min-h-screen bg-primaryDark flex items-center justify-center">
-        <span className="text-sm font-semibold text-slate-400 animate-pulse">Authenticating session...</span>
+      <div className="flex items-center justify-center py-20">
+        <span className="text-sm font-semibold text-slate-400 animate-pulse">
+          Authenticating session...
+        </span>
       </div>
     );
   }

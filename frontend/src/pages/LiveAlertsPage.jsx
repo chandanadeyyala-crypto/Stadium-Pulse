@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useCallback } from 'react';
+import { getAlerts } from '../utils/api';
 import AlertCard from '../components/AlertCard';
 import LoadingState from '../components/LoadingState';
 import EmptyState from '../components/EmptyState';
@@ -16,26 +16,31 @@ export default function LiveAlertsPage() {
   const [filter, setFilter] = useState('all');
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchAlerts = async (isManual = false) => {
+  const fetchAlerts = useCallback(async (signal = null, isManual = false) => {
     if (isManual) setRefreshing(true);
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const response = await axios.get(`${backendUrl}/api/alerts`);
+      const response = await getAlerts(signal);
       setAlerts(response.data);
     } catch (err) {
-      console.error('Failed to load active alerts:', err.message);
+      if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+        console.error('Failed to load active alerts:', err.message);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchAlerts();
+    const controller = new AbortController();
+    fetchAlerts(controller.signal);
 
-    const interval = setInterval(fetchAlerts, 10000);
-    return () => clearInterval(interval);
-  }, []);
+    const interval = setInterval(() => fetchAlerts(null), 10000);
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+    };
+  }, [fetchAlerts]);
 
   const filterCategories = [
     { id: 'all', label: 'All Alerts' },

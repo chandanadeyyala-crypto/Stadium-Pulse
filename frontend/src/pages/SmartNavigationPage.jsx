@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { getAlerts, recommendRoute } from '../utils/api';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import RouteCard from '../components/RouteCard';
@@ -83,16 +83,19 @@ export default function SmartNavigationPage() {
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
     const loadAlerts = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-        const res = await axios.get(`${backendUrl}/api/alerts`);
+        const res = await getAlerts(controller.signal);
         setAlerts(res.data);
       } catch (err) {
-        console.warn('Failed to load alerts for map overlay:', err.message);
+        if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+          console.warn('Failed to load alerts for map overlay:', err.message);
+        }
       }
     };
     loadAlerts();
+    return () => controller.abort();
   }, []);
 
   const handleCalculateRoute = async () => {
@@ -105,22 +108,7 @@ export default function SmartNavigationPage() {
     setLoading(true);
     setError('');
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const token = localStorage.getItem('stadiumpulse_user')
-        ? JSON.parse(localStorage.getItem('stadiumpulse_user')).token
-        : '';
-
-      const response = await axios.post(`${backendUrl}/api/routes/recommend`, {
-        currentLocation: start,
-        destination: end,
-        routePreference: preference
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-demo-role': 'fan'
-        }
-      });
-
+      const response = await recommendRoute(start, end, preference);
       if (response.data.success) {
         setRouteData(response.data);
       }

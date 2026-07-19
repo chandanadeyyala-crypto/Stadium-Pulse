@@ -57,13 +57,16 @@ describe('LandingPage rendering and actions', () => {
     expect(screen.getByText('Accessibility')).toBeInTheDocument();
   });
 
-  it('calls healthCheck on render', () => {
+  it('renders without calling healthCheck (warm-up is in main.jsx, not LandingPage)', () => {
     render(
       <MemoryRouter>
         <LandingPage />
       </MemoryRouter>
     );
-    expect(api.healthCheck).toHaveBeenCalled();
+    // healthCheck should NOT be called by LandingPage — it runs once in main.jsx
+    expect(api.healthCheck).not.toHaveBeenCalled();
+    // Verify the page still renders correctly
+    expect(screen.getAllByText(/StadiumPulse/i)[0]).toBeInTheDocument();
   });
 
   it('signs in as fan demo role and navigates to fan home', () => {

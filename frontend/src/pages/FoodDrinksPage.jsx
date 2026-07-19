@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getFacilities } from '../utils/api';
+import { getFacilities, cacheGet, cacheSet } from '../utils/api';
 import { useTranslation } from '../utils/useTranslation';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { FoodCardsSkeleton } from '../components/Skeleton';
@@ -63,26 +63,41 @@ export default function FoodDrinksPage() {
   const [accessibleOnly, setAccessibleOnly] = useState(false);
   const [openOnly, setOpenOnly] = useState(false);
 
-  const fetchFacilities = useCallback(async () => {
+  const CACHE_KEY = 'food_facilities';
+  const foodDrinkCategories = [
+    'Meals', 'Snacks', 'Vegetarian', 'Vegan', 'Halal',
+    'Beverages', 'Water stations', 'Coffee', 'Desserts'
+  ];
+
+  const filterFoodFacilities = (data) =>
+    data.filter(facility =>
+      facility.category && (
+        foodDrinkCategories.includes(facility.category) ||
+        facility.id.includes('Food') ||
+        facility.id.includes('Water') ||
+        facility.id.includes('Beverage') ||
+        facility.id.includes('Coffee')
+      )
+    );
+
+  const fetchFacilities = useCallback(async (signal) => {
     try {
       setLoading(true);
       setError('');
-      const res = await getFacilities();
-      const foodDrinkCategories = [
-        'Meals', 'Snacks', 'Vegetarian', 'Vegan', 'Halal',
-        'Beverages', 'Water stations', 'Coffee', 'Desserts'
-      ];
-      const foodFacilities = res.data.filter(facility =>
-        facility.category && (
-          foodDrinkCategories.includes(facility.category) ||
-          facility.id.includes('Food') ||
-          facility.id.includes('Water') ||
-          facility.id.includes('Beverage') ||
-          facility.id.includes('Coffee')
-        )
-      );
+
+      // Serve from cache immediately if available (stale-while-revalidate)
+      const cached = cacheGet(CACHE_KEY);
+      if (cached) {
+        setFacilities(cached);
+        setLoading(false);
+      }
+
+      const res = await getFacilities(signal);
+      const foodFacilities = filterFoodFacilities(res.data);
+      cacheSet(CACHE_KEY, foodFacilities);
       setFacilities(foodFacilities);
     } catch (err) {
+      if (err.name === 'CanceledError' || err.name === 'AbortError') return;
       setError(t('Failed to load menu options. Please check your connection.'));
     } finally {
       setLoading(false);
@@ -90,7 +105,9 @@ export default function FoodDrinksPage() {
   }, [t]);
 
   useEffect(() => {
-    fetchFacilities();
+    const controller = new AbortController();
+    fetchFacilities(controller.signal);
+    return () => controller.abort();
   }, [fetchFacilities]);
 
   const categories = [

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useTranslation } from '../utils/useTranslation';
+import { getAlerts } from '../utils/api';
 import StatusBadge from '../components/StatusBadge';
 import AlertCard from '../components/AlertCard';
 import {
@@ -17,7 +18,6 @@ import {
   Stethoscope,
   BookMarked
 } from 'lucide-react';
-import axios from 'axios';
 
 export default function FanHomePage() {
   const { user } = useAuth();
@@ -28,19 +28,27 @@ export default function FanHomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchAlerts = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-        const response = await axios.get(`${backendUrl}/api/alerts`, { timeout: 3000 });
+        const response = await getAlerts(controller.signal);
         setAlerts(response.data.slice(0, 2));
       } catch (err) {
+        if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+          // Silently fail — alerts are non-critical on the home page
+        }
       } finally {
         setLoadingAlerts(false);
       }
     };
+
     fetchAlerts();
     const interval = setInterval(fetchAlerts, 8000);
-    return () => clearInterval(interval);
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+    };
   }, []);
 
   const getGreeting = () => {

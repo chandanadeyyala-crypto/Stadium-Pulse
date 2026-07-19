@@ -7,6 +7,8 @@ import * as api from '../utils/api';
 
 vi.mock('../utils/api', () => ({
   getFacilities: vi.fn(),
+  cacheGet: vi.fn(() => null),   // always return null (no cache) in tests
+  cacheSet: vi.fn(),
 }));
 
 const stableT = (str) => str;
